@@ -60,6 +60,12 @@ button:hover { border-color: var(--accent); }
 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 600; }
 button:disabled { opacity: .45; cursor: default; }
+.checks { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 10px 20px; padding: 12px 14px; background: var(--accent-soft); border-radius: 4px; }
+.checks span { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.checks b { font-family: var(--f-mono); font-weight: 500; font-size: 15px; font-variant-numeric: tabular-nums; }
+.checks ul { margin: 2px 0 0; padding-left: 18px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.checks .after { min-width: 0; }
+@media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
 .dots { display: flex; gap: 4px; margin-left: auto; }
 .dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
 .dots span.on { background: var(--accent); }
@@ -118,6 +124,10 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
         <span class="step-title" id="stepTitle"></span>
       </div>
       <p class="step-text" id="stepText"></p>
+      <div class="checks">
+        <div class="gauge"><span>Butée</span><b id="stepGauge"></b></div>
+        <div class="after"><span>Cotes à mesurer après ce pli</span><ul id="stepAfter"></ul></div>
+      </div>
       <div class="controls">
         <button type="button" id="bFlat">Plat</button>
         <button type="button" id="bPrev">◀ Précédent</button>
@@ -133,22 +143,22 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
     <ol class="ops">
       <li><div><h3>Découpe laser du développé</h3><p>Flan 713 × 360,27 avec les deux crans d'extrémité, les fentes de dégagement entre pattes et partie haute, et les 4 trous Ø9 (2 par patte). Le texte CISMEKA est en gravure / marquage laser, pas découpé (les lettres fermées tomberaient).</p></div></li>
       <li><div><h3>Ébavurage</h3><p>Casser les arêtes, surtout dans les crans et autour des trous Ø9. Vérifier la planéité avant pliage.</p></div></li>
-      <li><div><h3>Pliage presse plieuse : 6 plis</h3><p>Pattes d'abord tant que la pièce est à plat, puis retourner et faire les retours avant les ailes. Détail dans le tableau ci-dessous.</p></div></li>
+      <li><div><h3>Pliage presse plieuse : 6 plis</h3><p>Ordre : 2 pattes (pièce à plat) → retourner → 2 retours → 2 ailes. Butée et cotes à mesurer après chaque pli dans le tableau ci-dessous.</p></div></li>
       <li><div><h3>Contrôle</h3><p>Hauteur hors-tout 230, ailes 40, retours 35, pattes 30, équerrage des 6 plis à 90°, entraxe et position des trous Ø9.</p></div></li>
     </ol>
 
     <div class="tablewrap">
       <table>
         <thead>
-          <tr><th>Pli</th><th>Désignation</th><th>Sens</th><th>Longueur pliée</th><th>Cote développé</th><th>Outillage</th><th>Remarque</th></tr>
+          <tr><th>Ordre</th><th>Pli</th><th>Sens</th><th>Position pièce</th><th>Butée</th><th>Outillage</th><th>Cotes à mesurer après le pli</th></tr>
         </thead>
         <tbody>
-          <tr><td class="num">1</td><td>Patte gauche</td><td><span class="dir up">UP 90°</span></td><td class="num">≈ 130</td><td class="num">27,53</td><td>Poinçon segmenté court ≈ 120, matrice V16–V20</td><td>Pièce à plat, face gravée vers le haut</td></tr>
-          <tr><td class="num">2</td><td>Patte droite</td><td><span class="dir up">UP 90°</span></td><td class="num">≈ 130</td><td class="num">27,53</td><td>Idem pli 1</td><td>Même réglage, tourner la pièce</td></tr>
-          <tr><td class="num">3</td><td>Retour haut</td><td><span class="dir down">DOWN 90°</span></td><td class="num">713</td><td class="num">32,53</td><td>Poinçon droit, V16–V20</td><td>Retourner la pièce : pattes vers le bas</td></tr>
-          <tr><td class="num">4</td><td>Retour bas</td><td><span class="dir down">DOWN 90°</span></td><td class="num">≈ 607</td><td class="num">32,53</td><td>Idem pli 3</td><td>Même butée que pli 3</td></tr>
-          <tr><td class="num">5</td><td>Aile haute</td><td><span class="dir down">DOWN 90°</span></td><td class="num">713</td><td class="num">67,60</td><td>Poinçon col de cygne</td><td>Le retour de 35 remonte vers le poinçon</td></tr>
-          <tr><td class="num">6</td><td>Aile basse</td><td><span class="dir down">DOWN 90°</span></td><td class="num">≈ 607</td><td class="num">67,60</td><td>Col de cygne + outillage segmenté ≤ 600</td><td>Les pattes pendent juste au bout de ce pli : l'outil doit s'arrêter entre les deux pattes</td></tr>
+          <tr><td class="num">1</td><td>Patte gauche</td><td><span class="dir up">UP 90°</span></td><td>À plat, face gravée en haut</td><td class="num">27,53<br>sur le bout de la patte</td><td>Poinçon segmenté ≈ 120, V16–V20</td><td>Patte 30 ext. · 90° · flan toujours 713 × 360,27</td></tr>
+          <tr><td class="num">2</td><td>Patte droite</td><td><span class="dir up">UP 90°</span></td><td>Tourner de 180°</td><td class="num">27,53</td><td>Idem pli 1</td><td>Patte 30 ext. · 90° · ≈ 607 entre faces ext. des pattes</td></tr>
+          <tr><td class="num">3</td><td>Retour haut</td><td><span class="dir down">DOWN 90°</span></td><td>Retournée, pattes en bas</td><td class="num">32,53<br>bord haut</td><td>Poinçon droit, V16–V20</td><td>Retour 35 · largeur à plat 330,2</td></tr>
+          <tr><td class="num">4</td><td>Retour bas</td><td><span class="dir down">DOWN 90°</span></td><td>Tourner de 180°</td><td class="num">32,53<br>bord bas</td><td>Idem pli 3</td><td>Retour 35 · largeur ext. retour à retour 300,2</td></tr>
+          <tr><td class="num">5</td><td>Aile haute</td><td><span class="dir down">DOWN 90°</span></td><td>Retour haut contre la butée</td><td class="num">≈ 37,5<br>sur l'ext. du retour</td><td>Col de cygne</td><td>Aile 40 · retour 35 · reste à plat 265,1</td></tr>
+          <tr><td class="num">6</td><td>Aile basse</td><td><span class="dir down">DOWN 90°</span></td><td>Retour bas contre la butée</td><td class="num">≈ 37,5<br>sur l'ext. du retour</td><td>Col de cygne, segmenté ≤ 600</td><td>Hauteur 230 · ailes 40 / 40 · retours 35 / 35 · ouverture 160</td></tr>
         </tbody>
       </table>
     </div>
@@ -268,13 +278,20 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
 
   // ---- bend sequence ----
   const STEPS = [
-    { part: null, title: 'Flan découpé laser', text: 'Développé 713 × 360,27 à plat, vu côté face gravée. Trous Ø9 et crans déjà découpés.' },
-    { part: 'tabL', title: 'Pli 1 · patte gauche UP 90°', text: 'Pièce à plat, face gravée vers le haut. Poinçon segmenté court sur la longueur de la patte seulement : la partie haute qui dépasse ne doit pas être prise.' },
-    { part: 'tabR', title: 'Pli 2 · patte droite UP 90°', text: 'Même réglage et même butée (27,53). Tourner la pièce de 180°.' },
-    { part: 'lipT', title: 'Pli 3 · retour haut DOWN 90°', text: 'Retourner la pièce : les pattes pointent maintenant vers le bas. Butée à 32,53 du bord, pli sur 713.' },
-    { part: 'lipB', title: 'Pli 4 · retour bas DOWN 90°', text: 'Même butée. Pli sur ≈ 607 seulement ; les pattes restent hors de l\'outil.' },
-    { part: 'flT', title: 'Pli 5 · aile haute DOWN 90°', text: 'Poinçon col de cygne : le retour de 35 remonte vers le poinçon pendant le pli. Cote développé 67,60 depuis le bord.' },
-    { part: 'flB', title: 'Pli 6 · aile basse DOWN 90°', text: 'Dernier pli, la pièce se ferme en C. Outillage segmenté ≤ 600 pour passer entre les deux pattes, col de cygne pour dégager le retour.' }
+    { part: null, title: 'Flan découpé laser', text: 'Développé à plat, vu côté face gravée. Trous Ø9 et crans déjà découpés.',
+      gauge: '—', after: ['Flan 713 × 360,27', 'Diagonales égales (équerrage du flan)', 'Trous Ø9 ×4'] },
+    { part: 'tabL', title: 'Pli 1 · patte gauche UP 90°', text: 'Pièce à plat, face gravée vers le haut. Poinçon segmenté court sur la patte seulement. Doigt de butée aligné sur la patte, pas sur la partie haute qui dépasse.',
+      gauge: '27,53 (bout de la patte)', after: ['Patte gauche 30 ext.', 'Angle 90°', 'Flan toujours 713 × 360,27'] },
+    { part: 'tabR', title: 'Pli 2 · patte droite UP 90°', text: 'Même réglage et même butée. Tourner la pièce de 180°.',
+      gauge: '27,53 (bout de la patte)', after: ['Patte droite 30 ext.', 'Angle 90°', '≈ 607 entre faces ext. des deux pattes (estimé)'] },
+    { part: 'lipT', title: 'Pli 3 · retour haut DOWN 90°', text: 'Retourner la pièce : face gravée en bas, pattes vers le bas. Bord haut contre la butée, pli sur 713.',
+      gauge: '32,53 (bord haut)', after: ['Retour haut 35 ext.', 'Angle 90°', 'Largeur à plat 330,2 (bord bas → ext. retour)'] },
+    { part: 'lipB', title: 'Pli 4 · retour bas DOWN 90°', text: 'Même butée, tourner la pièce de 180°. Pli sur ≈ 607 seulement ; les pattes restent hors de l\'outil.',
+      gauge: '32,53 (bord bas)', after: ['Retour bas 35 ext.', 'Angle 90°', 'Largeur 300,2 (ext. retour → ext. retour)'] },
+    { part: 'flT', title: 'Pli 5 · aile haute DOWN 90°', text: 'Retour haut contre la butée (il est debout, vers le poinçon). Poinçon col de cygne pour ne pas toucher le retour.',
+      gauge: '≈ 37,5 (ext. du retour)', after: ['Aile haute 40 ext.', 'Retour haut 35', 'Angle 90°', 'Reste à plat 265,1 (ext. aile → ext. retour bas)'] },
+    { part: 'flB', title: 'Pli 6 · aile basse DOWN 90°', text: 'Dernier pli, la pièce se ferme en C. Outillage segmenté ≤ 600 pour passer entre les deux pattes, col de cygne pour dégager le retour.',
+      gauge: '≈ 37,5 (ext. du retour)', after: ['Hauteur hors-tout 230', 'Ailes 40 / 40', 'Retours 35 / 35', 'Ouverture entre retours 160', 'Pattes 30, à 90° de l\'âme'] }
   ];
   const ORDER = STEPS.slice(1).map(s => s.part);
   const angle = {}; ORDER.forEach(k => angle[k] = 0);
@@ -311,6 +328,9 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
     $('stepNo').textContent = 'ÉTAPE ' + step + ' / ' + (STEPS.length - 1);
     $('stepTitle').textContent = STEPS[step].title;
     $('stepText').textContent = STEPS[step].text;
+    $('stepGauge').textContent = STEPS[step].gauge;
+    const ul = $('stepAfter'); ul.textContent = '';
+    STEPS[step].after.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
     $('bPrev').disabled = step === 0;
     $('bNext').disabled = step === STEPS.length - 1;
     [...dots.children].forEach((d, i) => d.classList.toggle('on', i < step));

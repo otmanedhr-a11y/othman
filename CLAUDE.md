@@ -12,6 +12,9 @@ Sans attendre qu'il le demande, livrer automatiquement :
    - ordre des plis à la presse plieuse : sens (UP/DOWN), longueur de pli,
      cote développé, outillage (V matrice, poinçon droit / col de cygne,
      outillage segmenté), retournements de pièce, risques de collision ;
+   - pour CHAQUE pli, dans l'ordre (1er, 2e, 3e…) : position de la pièce,
+     valeur de butée, et les cotes à mesurer sur la pièce juste après ce pli
+     (longueur de l'aile pliée, angle, largeur restante à plat) ;
    - autres opérations (ébavurage, soudure, perçage, taraudage, finition) ;
    - points de contrôle.
 3. **Hypothèses et cotes à confirmer** : épaisseur, matière, K-factor / déduction
