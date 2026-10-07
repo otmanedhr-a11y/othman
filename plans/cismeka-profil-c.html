@@ -15,6 +15,7 @@
   --warn-soft: #fff3df;
   --viewer: #e4e8ec;
   --edge: #2a3038;
+  --bend: #d0502a;
   --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
   --f-body: "IBM Plex Sans", system-ui, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -23,13 +24,13 @@
   :root:not([data-theme="light"]) {
     --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
     --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
-    --viewer: #20272f; --edge: #0b0e12; color-scheme: dark;
+    --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
   --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
-  --viewer: #20272f; --edge: #0b0e12; color-scheme: dark;
+  --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
@@ -66,6 +67,27 @@ button:disabled { opacity: .45; cursor: default; }
 .checks ul { margin: 2px 0 0; padding-left: 18px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
 .checks .after { min-width: 0; }
 @media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
+
+.dia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.dia { display: grid; gap: 6px; min-width: 0; }
+.dia h3 { margin: 0; font-size: 14px; font-family: var(--f-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dia .svgwrap { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.dia svg { display: block; width: 100%; min-width: 300px; height: auto; }
+.dia.wide svg { min-width: 560px; }
+.dia .cap { margin: 0; font-size: 13px; color: var(--muted); }
+svg .o { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.5; }
+svg .p { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: miter; }
+svg .ft { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.2; }
+svg .ghost { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+svg .b { stroke: var(--bend); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+svg .d { stroke: var(--muted); stroke-width: 1; fill: none; }
+svg .hole { fill: var(--bg); stroke: var(--ink); stroke-width: 1; }
+svg text { font-family: var(--f-mono); font-size: 12px; fill: var(--ink); }
+svg text.m { fill: var(--muted); font-size: 11px; }
+svg text.s { fill: var(--bend); font-size: 10px; }
+svg text.big { font-size: 14px; font-weight: 500; }
+svg .nb circle { fill: var(--bend); }
+svg .nb text { fill: #fff; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
 .dots { display: flex; gap: 4px; margin-left: auto; }
 .dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
 .dots span.on { background: var(--accent); }
@@ -161,6 +183,48 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
           <tr><td class="num">6</td><td>Aile basse</td><td><span class="dir down">DOWN 90°</span></td><td>Retour bas contre la butée</td><td class="num">≈ 37,5<br>sur l'ext. du retour</td><td>Col de cygne, segmenté ≤ 600</td><td>Hauteur 230 · ailes 40 / 40 · retours 35 / 35 · ouverture 160</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+
+  <section class="card">
+    <h2>Avant et après pliage</h2>
+    <div class="dia-grid">
+      <div class="dia wide">
+        <h3>Avant pliage · développé 713 × 360,27</h3>
+        <div class="svgwrap"><svg viewBox="0 0 640 400" role="img" aria-label="Développé avec lignes de pli">
+<polygon class="o" points="120,40 520,40 520,172 508,172 508,278 480,278 480,340 160,340 160,278 132,278 132,172 120,172"/>
+<line class="b" x1="120" y1="67" x2="520" y2="67"/><line class="b" x1="120" y1="96" x2="520" y2="96"/>
+<line class="b" x1="160" y1="284" x2="480" y2="284"/><line class="b" x1="160" y1="313" x2="480" y2="313"/>
+<line class="b" x1="160" y1="172" x2="160" y2="278"/><line class="b" x1="480" y1="172" x2="480" y2="278"/>
+<text class="s" x="330" y="63" text-anchor="middle">DOWN 90° R3</text><text class="s" x="330" y="92" text-anchor="middle">DOWN 90° R3</text>
+<text class="s" x="330" y="280" text-anchor="middle">DOWN 90° R3</text><text class="s" x="330" y="309" text-anchor="middle">DOWN 90° R3</text>
+<text class="s" x="146" y="190" text-anchor="middle">UP</text><text class="s" x="494" y="190" text-anchor="middle">UP</text>
+<g class="nb"><circle cx="137" cy="67" r="9"/><text x="137" y="67">3</text></g><g class="nb"><circle cx="137" cy="96" r="9"/><text x="137" y="96">5</text></g><g class="nb"><circle cx="177" cy="284" r="9"/><text x="177" y="284">6</text></g><g class="nb"><circle cx="177" cy="313" r="9"/><text x="177" y="313">4</text></g><g class="nb"><circle cx="146" cy="225" r="9"/><text x="146" y="225">1</text></g><g class="nb"><circle cx="494" cy="225" r="9"/><text x="494" y="225">2</text></g>
+<text x="112" y="44" text-anchor="end">0</text><text x="112" y="71" text-anchor="end">32,53</text><text x="112" y="100" text-anchor="end">67,60</text>
+<text x="112" y="288" text-anchor="end">292,67</text><text x="112" y="317" text-anchor="end">327,74</text><text x="112" y="344" text-anchor="end">360,27</text>
+<text x="532" y="57">32,53</text><text x="532" y="85">35,07</text><text x="532" y="194">225,07</text><text x="532" y="302">35,07</text><text x="532" y="330">32,53</text>
+<text class="m" x="320" y="140" text-anchor="middle">CISMEKA</text>
+<text class="m" x="139" y="296" text-anchor="middle">27,53</text><text class="m" x="501" y="296" text-anchor="middle">27,53</text>
+<path class="d" d="M160 356H480M160 351v10M480 351v10"/><text x="320.0" y="350" text-anchor="middle">≈ 607 (estimé)</text><path class="d" d="M120 384H520M120 379v10M520 379v10"/><text x="320.0" y="378" text-anchor="middle">713</text>
+</svg></div>
+        <p class="cap">Traits rouges = lignes de pli, numéro = ordre de pliage. À gauche : distance depuis le bord haut. À droite : largeur de chaque bande. Schéma pas à l'échelle.</p>
+      </div>
+      <div class="dia">
+        <h3>Après pliage · profil (cotes extérieures)</h3>
+        <div class="svgwrap"><svg viewBox="0 0 420 400" role="img" aria-label="Profil après pliage">
+<rect class="ft" x="300" y="158" width="39" height="178"/>
+<circle class="hole" cx="320" cy="205" r="4"/><circle class="hole" cx="320" cy="290" r="4"/>
+<polyline class="p" points="248,86 248,40 300,40 300,340 248,340 248,294"/>
+<g class="nb"><circle cx="248" cy="40" r="9"/><text x="248" y="40">3</text></g><g class="nb"><circle cx="300" cy="40" r="9"/><text x="300" y="40">5</text></g><g class="nb"><circle cx="300" cy="340" r="9"/><text x="300" y="340">6</text></g><g class="nb"><circle cx="248" cy="340" r="9"/><text x="248" y="340">4</text></g>
+<path class="d" d="M248 20H300M248 15v10M300 15v10"/><text x="274.0" y="14" text-anchor="middle">40</text><path class="d" d="M228 40V86M223 40h10M223 86h10"/><text x="220" y="67.0" text-anchor="end">35</text><path class="d" d="M228 294V340M223 294h10M223 340h10"/><text x="220" y="321.0" text-anchor="end">35</text>
+<path class="d" d="M372 40V340M367 40h10M367 340h10"/><text x="382" y="194.0" text-anchor="start">230</text><path class="d" d="M300 364H339M300 359v10M339 359v10"/><text x="319.5" y="380" text-anchor="middle">30</text>
+<text class="m" x="240" y="194" text-anchor="end">ouverture</text><text class="m" x="240" y="208" text-anchor="end">160</text>
+<text class="m" x="330" y="150" text-anchor="middle">patte</text><text class="m" x="352" y="252">plis 1·2</text>
+<text class="m" x="290" y="194" text-anchor="end">âme</text>
+</svg></div>
+        <p class="cap">Retours 35, ailes 40, âme 230, pattes 30 côté face gravée. Bande 32,53 → 35 ; 35,07 → 40 ; 225,07 → 230 ; 27,53 → 30.</p>
+      </div>
     </div>
   </section>
 

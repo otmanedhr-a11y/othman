@@ -15,6 +15,7 @@
   --warn-soft: #fff3df;
   --viewer: #e4e8ec;
   --edge: #2a3038;
+  --bend: #d0502a;
   --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
   --f-body: "IBM Plex Sans", system-ui, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -23,13 +24,13 @@
   :root:not([data-theme="light"]) {
     --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
     --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
-    --viewer: #20272f; --edge: #0b0e12; color-scheme: dark;
+    --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
   --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
-  --viewer: #20272f; --edge: #0b0e12; color-scheme: dark;
+  --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
@@ -66,6 +67,29 @@ button:disabled { opacity: .45; cursor: default; }
 .checks ul { margin: 2px 0 0; padding-left: 18px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
 .checks .after { min-width: 0; }
 @media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
+
+.dia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.dia { display: grid; gap: 6px; min-width: 0; }
+.dia h3 { margin: 0; font-size: 14px; font-family: var(--f-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dia .svgwrap { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.dia svg { display: block; width: 100%; min-width: 300px; height: auto; }
+.dia.wide svg { min-width: 560px; }
+.dia .cap { margin: 0; font-size: 13px; color: var(--muted); }
+svg .o { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.5; }
+svg .p { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: miter; }
+svg .ft { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.2; }
+svg .ghost { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+svg .b { stroke: var(--bend); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+svg .d { stroke: var(--muted); stroke-width: 1; fill: none; }
+svg .hole { fill: var(--bg); stroke: var(--ink); stroke-width: 1; }
+svg text { font-family: var(--f-mono); font-size: 12px; fill: var(--ink); }
+svg text.m { fill: var(--muted); font-size: 11px; }
+svg text.s { fill: var(--bend); font-size: 10px; }
+svg.lg text { font-size: 17px; }
+svg.lg text.m { font-size: 15px; }
+svg text.big { font-size: 14px; font-weight: 500; }
+svg .nb circle { fill: var(--bend); }
+svg .nb text { fill: #fff; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
 .dots { display: flex; gap: 4px; margin-left: auto; }
 .dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
 .dots span.on { background: var(--accent); }
@@ -160,6 +184,59 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
           <tr><td class="num">6</td><td>Joue droite</td><td class="num">≈ 297</td><td>Idem, tourner de 180°</td><td class="num">185,71</td><td>Idem pli 5</td><td>Longueur hors-tout 1023 · joues 189 · retours 28,5 · équerrage</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+
+  <section class="card">
+    <h2>Avant et après pliage</h2>
+    <div class="dia wide">
+      <h3>Avant pliage · développé 1444,85 × 503,42</h3>
+      <div class="svgwrap"><svg viewBox="0 0 780 360" role="img" aria-label="Développé avec lignes de pli">
+<polygon class="o" points="150,60 500,60 500,110 530,110 530,130 594,130 594,169 630,169 630,250 530,250 530,268 150,268 150,250 50,250 50,169 86,169 86,130 150,130"/>
+<line class="b" x1="150" y1="130" x2="530" y2="130"/><line class="b" x1="150" y1="250" x2="530" y2="250"/>
+<line class="b" x1="150" y1="130" x2="150" y2="250"/><line class="b" x1="530" y1="130" x2="530" y2="250"/>
+<line class="b" x1="86" y1="169" x2="86" y2="250"/><line class="b" x1="594" y1="169" x2="594" y2="250"/>
+<g class="nb"><circle cx="172" cy="130" r="9"/><text x="172" y="130">4</text></g><g class="nb"><circle cx="172" cy="250" r="9"/><text x="172" y="250">3</text></g><g class="nb"><circle cx="150" cy="190" r="9"/><text x="150" y="190">5</text></g><g class="nb"><circle cx="530" cy="190" r="9"/><text x="530" y="190">6</text></g><g class="nb"><circle cx="86" cy="215" r="9"/><text x="86" y="215">1</text></g><g class="nb"><circle cx="594" cy="215" r="9"/><text x="594" y="215">2</text></g>
+<text class="m" x="330" y="99" text-anchor="middle">fond</text><text class="m" x="340" y="194" text-anchor="middle">paroi</text>
+<text class="m" x="118" y="160" text-anchor="middle">joue</text><text class="m" x="562" y="160" text-anchor="middle">joue</text>
+<text class="m" x="515" y="96" text-anchor="middle">cran</text>
+<text class="s" x="340" y="126" text-anchor="middle">UP 90° R2</text><text class="s" x="340" y="246" text-anchor="middle">UP 90° R2</text>
+<text x="68" y="44" text-anchor="middle">26,86</text><text x="118" y="44" text-anchor="middle">185,71</text><text x="340" y="44" text-anchor="middle">1019,72</text>
+<text x="562" y="44" text-anchor="middle">185,71</text><text x="612" y="44" text-anchor="middle">26,86</text>
+<path class="d" d="M50 254V280M86 254V296M150 272V280M530 272V280M594 254V296M630 254V280"/>
+<text x="50" y="292" text-anchor="middle">0</text><text x="86" y="308" text-anchor="middle">26,86</text><text x="150" y="292" text-anchor="middle">212,57</text>
+<text x="530" y="292" text-anchor="middle">1232,29</text><text x="594" y="308" text-anchor="middle">1418,00</text><text x="636" y="292" text-anchor="middle">1444,85</text>
+<text class="m" x="645" y="22">depuis</text><text class="m" x="645" y="35">le fond</text><text class="m" x="715" y="22">largeur</text><text class="m" x="715" y="35">bande</text><text x="645" y="64">0</text><text x="645" y="134">187,36</text><text x="645" y="254">485,06</text><text x="645" y="274">503,42</text>
+<text x="715" y="99">187,36</text><text x="715" y="194">297,70</text><text x="715" y="263">18,36</text>
+<path class="d" d="M50 340H630M50 335v10M630 335v10"/><text x="340.0" y="334" text-anchor="middle">1444,85</text>
+</svg></div>
+      <p class="cap">Traits rouges = lignes de pli (tous UP 90° R2), numéro = ordre de pliage. En haut : longueur de chaque bande. En bas : distance depuis le bout gauche. À droite : distance depuis le bord du fond, puis largeur de chaque bande. Schéma pas à l'échelle.</p>
+    </div>
+    <div class="dia-grid">
+      <div class="dia">
+        <h3>Après pliage · coupe</h3>
+        <div class="svgwrap"><svg viewBox="0 0 360 370" role="img" aria-label="Coupe après pliage">
+<polyline class="p" points="139,40 120,40 120,320 296,320"/>
+<g class="nb"><circle cx="120" cy="40" r="9"/><text x="120" y="40">3</text></g><g class="nb"><circle cx="120" cy="320" r="9"/><text x="120" y="320">4</text></g>
+<path class="d" d="M120 22H139M120 17v10M139 17v10"/><text x="129.5" y="16" text-anchor="middle">20</text><path class="d" d="M88 40V320M83 40h10M83 320h10"/><text x="80" y="184.0" text-anchor="end">301</text><path class="d" d="M120 346H296M120 341v10M296 341v10"/><text x="208.0" y="362" text-anchor="middle">189</text>
+<text class="m" x="130" y="184">paroi</text><text class="m" x="208" y="312" text-anchor="middle">fond</text>
+</svg></div>
+        <p class="cap">Bande 187,36 → fond 189 ; 297,70 → paroi 301 ; 18,36 → retour 20.</p>
+      </div>
+      <div class="dia">
+        <h3>Après pliage · vue de dessus</h3>
+        <div class="svgwrap"><svg class="lg" viewBox="0 0 600 260" role="img" aria-label="Vue de dessus après pliage">
+<polyline class="ghost" points="84,180 511,180 511,94 560,94"/>
+<polyline class="p" points="84,180 60,180 60,60 560,60 560,180 536,180"/>
+<g class="nb"><circle cx="60" cy="60" r="9"/><text x="60" y="60">5</text></g><g class="nb"><circle cx="560" cy="60" r="9"/><text x="560" y="60">6</text></g><g class="nb"><circle cx="60" cy="180" r="9"/><text x="60" y="180">1</text></g><g class="nb"><circle cx="560" cy="180" r="9"/><text x="560" y="180">2</text></g>
+<path class="d" d="M60 34H560M60 29v10M560 29v10"/><text x="310.0" y="28" text-anchor="middle">1023</text><path class="d" d="M36 60V180M31 60h10M31 180h10"/><text x="28" y="124.0" text-anchor="end">189</text><path class="d" d="M60 206H84M60 201v10M84 201v10"/><text x="72.0" y="222" text-anchor="middle">28,5</text><path class="d" d="M536 206H560M536 201v10M560 201v10"/><text x="548.0" y="222" text-anchor="middle">28,5</text>
+<text class="m" x="300" y="76" text-anchor="middle">paroi 301 + retour 20</text>
+<text class="m" x="290" y="140" text-anchor="middle">fond 189 (pointillé)</text>
+<text class="m" x="535" y="132" text-anchor="middle">cran</text>
+</svg></div>
+        <p class="cap">Bande 1019,72 → longueur 1023 ; 185,71 → joue 189 ; 26,86 → retour 28,5.</p>
+      </div>
     </div>
   </section>
 
