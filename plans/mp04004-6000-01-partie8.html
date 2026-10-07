@@ -1,0 +1,405 @@
+<title>Profil MP04004-6000-01 P8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: atelier sheet — 3D viewer with bend stepper on top, then the routing card (gamme) as a table, assumptions last. */
+:root {
+  --bg: #eef0f2;
+  --panel: #ffffff;
+  --ink: #1b2129;
+  --muted: #5d6773;
+  --line: #d3d8de;
+  --accent: #1f5fd1;      /* layout-fluid blue */
+  --accent-soft: #e3ecfb;
+  --warn: #9a5b00;
+  --warn-soft: #fff3df;
+  --viewer: #e4e8ec;
+  --edge: #2a3038;
+  --bend: #d0502a;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+    --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+    --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+  --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+  --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 600; font-size: 24px; margin: 0; letter-spacing: .01em; }
+.specs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { font-family: var(--f-mono); font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); font-variant-numeric: tabular-nums; }
+.chip b { font-weight: 500; color: var(--accent); }
+.chip.est { border-style: dashed; }
+
+.viewer { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: grid; }
+#stage { position: relative; height: clamp(320px, 56vh, 560px); background: var(--viewer); touch-action: none; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+.views { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; }
+.views button { font-family: var(--f-mono); font-size: 12px; padding: 4px 9px; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: var(--muted); }
+.stepper { display: grid; gap: 12px; padding: 14px 16px 16px; border-top: 1px solid var(--line); }
+.step-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.step-no { font-family: var(--f-mono); font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.step-title { font-family: var(--f-display); font-size: 22px; font-weight: 600; }
+.step-text { margin: 0; color: var(--muted); max-width: 70ch; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: inherit; font-size: 14px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 600; }
+button:disabled { opacity: .45; cursor: default; }
+.checks { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 10px 20px; padding: 12px 14px; background: var(--accent-soft); border-radius: 4px; }
+.checks span { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.checks b { font-family: var(--f-mono); font-weight: 500; font-size: 15px; font-variant-numeric: tabular-nums; }
+.checks ul { margin: 2px 0 0; padding-left: 18px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.checks .after { min-width: 0; }
+@media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
+
+.dia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.dia { display: grid; gap: 6px; min-width: 0; }
+.dia h3 { margin: 0; font-size: 14px; font-family: var(--f-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dia .svgwrap { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.dia svg { display: block; width: 100%; min-width: 300px; height: auto; }
+.dia.wide svg { min-width: 560px; }
+.dia .cap { margin: 0; font-size: 13px; color: var(--muted); }
+svg .o { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.5; }
+svg .p { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: miter; }
+svg .ft { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.2; }
+svg .ghost { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+svg .b { stroke: var(--bend); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+svg .d { stroke: var(--muted); stroke-width: 1; fill: none; }
+svg .hole { fill: var(--bg); stroke: var(--ink); stroke-width: 1; }
+svg text { font-family: var(--f-mono); font-size: 12px; fill: var(--ink); }
+svg text.m { fill: var(--muted); font-size: 11px; }
+svg text.s { fill: var(--bend); font-size: 10px; }
+svg.lg text { font-size: 17px; }
+svg.lg text.m { font-size: 15px; }
+svg text.big { font-size: 14px; font-weight: 500; }
+svg .nb circle { fill: var(--bend); }
+svg .nb text { fill: #fff; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
+.dots { display: flex; gap: 4px; margin-left: auto; }
+.dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
+.dots span.on { background: var(--accent); }
+
+section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px 16px; display: grid; gap: 14px; min-width: 0; }
+ol.ops { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: op; }
+ol.ops li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; min-width: 0; }
+ol.ops li::before { counter-increment: op; content: "OP " counter(op, decimal-leading-zero); font-family: var(--f-mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+ol.ops h3 { margin: 0; font-size: 16px; font-weight: 600; }
+ol.ops p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dir { font-family: var(--f-mono); font-size: 12px; padding: 1px 7px; border-radius: 3px; white-space: nowrap; }
+.dir.up { background: var(--accent-soft); color: var(--accent); }
+.dir.down { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.note { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 12px 14px; border-radius: 4px; display: grid; gap: 6px; }
+.note h3 { margin: 0; font-size: 14px; color: var(--warn); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+.note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Plan MP04004-6000-01-partie8 · Robot de PAL L1 et L2 · E24 ép. 3 · peinture · qté 4</div>
+    <h1>Profil C à retour avec crans</h1>
+    <div class="specs">
+      <span class="chip">Longueur <b>894</b></span>
+      <span class="chip">Hauteur <b>80</b></span>
+      <span class="chip">Aile basse <b>50</b></span>
+      <span class="chip">Aile haute <b>30</b></span>
+      <span class="chip">Retour <b>20</b></span>
+      <span class="chip">Plis <b>3 × UP 90° R5</b></span>
+      <span class="chip est">Développé <b>894 × 162,63</b> (plan : 152,63)</span>
+    </div>
+  </header>
+
+  <div class="viewer">
+    <div id="stage">
+      <div class="views">
+        <button type="button" id="v-iso">Iso</button>
+        <button type="button" id="v-face">Face</button>
+        <button type="button" id="v-prof">Profil</button>
+      </div>
+      <div class="hint">Glisser pour tourner · molette / pincer pour zoomer</div>
+    </div>
+    <div class="stepper">
+      <div class="step-head">
+        <span class="step-no" id="stepNo">ÉTAPE 0 / 3</span>
+        <span class="step-title" id="stepTitle"></span>
+      </div>
+      <p class="step-text" id="stepText"></p>
+      <div class="checks">
+        <div class="gauge"><span>Butée</span><b id="stepGauge"></b></div>
+        <div class="after"><span>Cotes à mesurer après ce pli</span><ul id="stepAfter"></ul></div>
+      </div>
+      <div class="controls">
+        <button type="button" id="bFlat">Plat</button>
+        <button type="button" id="bPrev">◀ Précédent</button>
+        <button type="button" id="bNext" class="primary">Pli suivant ▶</button>
+        <button type="button" id="bDone">Pièce finie</button>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <h3>Cote à vérifier avant de couper</h3>
+    <ul>
+      <li>Le plan écrit 152,63 pour la largeur du développé. Les autres cotes donnent 162,63 : 17,11 + 24,21 + 74,21 + 47,11. C'est cohérent avec la hauteur 80 de la coupe et de la vue de face, et le dessin mesuré à l'échelle fait aussi ≈ 162.</li>
+      <li>Avec 152,63, l'âme ne fait que 70 au lieu de 80. Couper depuis le DXF du bureau d'études, ou leur faire confirmer. Cette page est calculée avec 162,63 (âme 80).</li>
+    </ul>
+  </div>
+
+  <section class="card">
+    <h2>Avant et après pliage</h2>
+    <div class="dia wide">
+      <h3>Avant pliage · développé 894 × 162,63</h3>
+      <div class="svgwrap"><svg viewBox="0 0 820 330" role="img" aria-label="Développé avec lignes de pli">
+<path class="o" d="M60 60H173V187H238V60H462V187H527V60H640V270H350A14 14 0 0 0 322 270H60Z"/>
+<path class="b" d="M60 85H173M238 85H462M527 85H640M60 120H173M238 120H462M527 120H640M60 215H640"/>
+<text class="s" x="350" y="81" text-anchor="middle">UP 90° R5</text><text class="s" x="350" y="116" text-anchor="middle">UP 90° R5</text><text class="s" x="350" y="211" text-anchor="middle">UP 90° R5</text>
+<g class="nb"><circle cx="600" cy="85" r="9"/><text x="600" y="85">1</text></g><g class="nb"><circle cx="600" cy="120" r="9"/><text x="600" y="120">2</text></g><g class="nb"><circle cx="600" cy="215" r="9"/><text x="600" y="215">3</text></g>
+<text x="52" y="64" text-anchor="end">0</text><text x="52" y="89" text-anchor="end">17,11</text><text x="52" y="124" text-anchor="end">41,32</text><text x="52" y="219" text-anchor="end">115,52</text><text x="52" y="274" text-anchor="end">162,63</text>
+<text x="652" y="77">17,11</text><text class="m" x="700" y="77">retour</text>
+<text x="652" y="106">24,21</text><text class="m" x="700" y="106">aile haute</text>
+<text x="652" y="171">74,21</text><text class="m" x="700" y="171">âme</text>
+<text x="652" y="246">47,11</text><text class="m" x="700" y="246">aile basse</text>
+<text class="m" x="205" y="52" text-anchor="middle">cran ≈ 100</text><text class="m" x="494" y="52" text-anchor="middle">cran ≈ 100</text>
+<text class="m" x="336" y="288" text-anchor="middle">½ rond R ≈ 20</text>
+<path class="d" d="M60 310H640M60 305v10M640 305v10"/><text x="350.0" y="304" text-anchor="middle">894</text>
+</svg></div>
+      <p class="cap">Traits rouges = lignes de pli (tous UP 90° R5), numéro = ordre de pliage. À gauche : distance depuis le bord du retour. À droite : largeur de chaque bande. Schéma pas à l'échelle.</p>
+    </div>
+    <div class="dia-grid">
+      <div class="dia">
+        <h3>Après pliage · coupe</h3>
+        <div class="svgwrap"><svg viewBox="0 0 360 340" role="img" aria-label="Coupe après pliage">
+<line class="ghost" x1="100" y1="205" x2="140" y2="205"/>
+<polyline class="p" points="210,100 210,40 120,40 120,280 270,280"/>
+<g class="nb"><circle cx="210" cy="40" r="9"/><text x="210" y="40">1</text></g><g class="nb"><circle cx="120" cy="40" r="9"/><text x="120" y="40">2</text></g><g class="nb"><circle cx="120" cy="280" r="9"/><text x="120" y="280">3</text></g>
+<path class="d" d="M120 20H210M120 15v10M210 15v10"/><text x="165.0" y="14" text-anchor="middle">30</text><path class="d" d="M236 40V100M231 40h10M231 100h10"/><text x="246" y="74.0" text-anchor="start">20</text><path class="d" d="M80 40V280M75 40h10M75 280h10"/><text x="72" y="164.0" text-anchor="end">80</text><path class="d" d="M120 308H270M120 303v10M270 303v10"/><text x="195.0" y="326" text-anchor="middle">50</text>
+<path class="d" d="M210 104V273"/><text class="m" x="218" y="192">jour ≈ 57</text>
+<text class="m" x="146" y="209">25 (crans)</text>
+</svg></div>
+        <p class="cap">Bande 17,11 → retour 20 ; 24,21 → aile haute 30 ; 74,21 → âme 80 ; 47,11 → aile basse 50.</p>
+      </div>
+      <div class="dia">
+        <h3>Après pliage · vue de face</h3>
+        <div class="svgwrap"><svg class="lg" viewBox="-40 0 790 190" role="img" aria-label="Vue de face après pliage">
+<path class="o" d="M40 50H161V105H230V50H470V105H539V50H660V130H40Z"/>
+<path class="d" d="M40 166H660M40 161v10M660 161v10"/><text x="350.0" y="160" text-anchor="middle">894</text><path class="d" d="M22 50V130M17 50h10M17 130h10"/><text x="16" y="94.0" text-anchor="end">80</text><path class="d" d="M680 105V130M675 105h10M675 130h10"/><text x="688" y="121.5" text-anchor="start">25</text>
+<text class="m" x="195" y="40" text-anchor="middle">≈ 100</text><text class="m" x="505" y="40" text-anchor="middle">≈ 100</text>
+<text class="m" x="100" y="40" text-anchor="middle">≈ 174</text><text class="m" x="600" y="40" text-anchor="middle">≈ 174</text>
+</svg></div>
+        <p class="cap">Les crans enlèvent le retour, l'aile haute et l'âme jusqu'à 25 du bas. Positions des crans lues à l'échelle.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Gamme de fabrication</h2>
+    <ol class="ops">
+      <li><div><h3>Découpe laser du développé</h3><p>Tôle E24 (S235) ép. 3. Flan 894 × 162,63 (à confirmer, voir plus haut) avec les 2 crans ≈ 100 de large et ≈ 93 de profondeur depuis le bord du retour, angles arrondis, et le demi-rond R ≈ 20 sur le bord de l'aile basse. 4 pièces.</p></div></li>
+      <li><div><h3>Ébavurage</h3><p>Casser les angles vifs (demandé au cartouche), surtout dans les crans et le demi-rond.</p></div></li>
+      <li><div><h3>Pliage presse plieuse : 3 plis, tous UP 90°</h3><p>Ordre : retour 20 → aile haute 30 → aile basse 50. La pièce garde la même face vers le haut. Matrice V24 : R5 demanderait un V30, mais le retour de 20 est trop court pour un V30 (aile mini ≈ 21).</p></div></li>
+      <li><div><h3>Contrôle puis peinture</h3><p>80 / 50 / 30 / 20, 25 sous les crans, équerrage et rectitude sur 894. Peinture après contrôle.</p></div></li>
+    </ol>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ordre</th><th>Pli</th><th>Longueur pliée</th><th>Position pièce</th><th>Butée</th><th>Outillage</th><th>Cotes à mesurer après le pli</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Retour</td><td class="num">894 (3 tronçons)</td><td>À plat, bord du retour contre la butée</td><td class="num">17,11<br>bord du retour</td><td>Poinçon droit, V24</td><td>Retour 20 ext. · 90° · largeur à plat 148,41</td></tr>
+          <tr><td class="num">2</td><td>Aile haute</td><td class="num">894 (3 tronçons)</td><td>Même face en haut, retour debout contre la butée</td><td class="num">27,10<br>sur l'ext. du retour</td><td>Poinçon droit, V24</td><td>Aile haute 30 · retour 20 · largeur à plat 124,20</td></tr>
+          <tr><td class="num">3</td><td>Aile basse</td><td class="num">894</td><td>Bord de l'aile basse contre la butée, doigts loin du demi-rond</td><td class="num">47,11<br>bord aile basse</td><td>Col de cygne, V24</td><td>Hauteur 80 · aile basse 50 · aile haute 30 · retour 20 · jour ≈ 57</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Lecture du plan</h2>
+      <dl>
+        <dt>Retour (développé)</dt><dd>17,11 → 20 fini</dd>
+        <dt>Aile haute (développé)</dt><dd>24,21 → 30 fini</dd>
+        <dt>Âme (développé)</dt><dd>74,21 → 80 fini</dd>
+        <dt>Aile basse (développé)</dt><dd>47,11 → 50 fini</dd>
+        <dt>Déduction par pli</dt><dd>5,78 (ép. 3, R5, K = 0,5)</dd>
+        <dt>Masse unitaire</dt><dd>≈ 3,0 kg (×4 ≈ 12 kg)</dd>
+      </dl>
+    </section>
+    <div class="note">
+      <h3>Autres points à confirmer</h3>
+      <ul>
+        <li>Crans non cotés sur la photo : ≈ 100 de large, à ≈ 174 de chaque bout (lu à l'échelle).</li>
+        <li>Demi-rond sur l'aile basse : R ≈ 20, centre à ≈ 425 du bout gauche (pas tout à fait au milieu). Lu à l'échelle.</li>
+        <li>Avec un V24 le rayon intérieur sera ≈ 4 au lieu de 5, donc la déduction réelle sera un peu plus petite. Faire une pièce d'essai et ajuster la butée.</li>
+        <li>Le modèle 3D est à angles vifs.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const L = 894, H = 80, FB = 50, FT = 30, LIP = 20, T = 3;
+  const NOTCHES = [[174, 274], [620, 720]], NOTCH_Y = 25;
+  const HALF = { x: 425, r: 20 };
+  const D90 = Math.PI / 2;
+
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.prepend(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 1, 20000);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6a7284, 1.0));
+  const d1 = new THREE.DirectionalLight(0xffffff, 0.85); d1.position.set(600, 900, 1200); scene.add(d1);
+  const d2 = new THREE.DirectionalLight(0xffffff, 0.35); d2.position.set(-900, 200, -800); scene.add(d2);
+
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x2a3038 });
+  const steel = 0xb9c0c8;
+  const meshes = {};
+  function plate(shapes, name) {
+    const geo = new THREE.ExtrudeGeometry(shapes, { depth: T, bevelEnabled: false, curveSegments: 28 });
+    geo.translate(0, 0, -T);
+    const mat = new THREE.MeshStandardMaterial({ color: steel, metalness: 0.55, roughness: 0.42, side: THREE.DoubleSide });
+    const m = new THREE.Mesh(geo, mat);
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), lineMat));
+    meshes[name] = m;
+    return m;
+  }
+  function poly(pts) { const s = new THREE.Shape(); pts.forEach((p, i) => i ? s.lineTo(p[0], p[1]) : s.moveTo(p[0], p[1])); s.closePath(); return s; }
+  const rect = (x0, y0, x1, y1) => poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]]);
+  // strips between the notches
+  const strips = (y0, y1) => [rect(0, y0, NOTCHES[0][0], y1), rect(NOTCHES[0][1], y0, NOTCHES[1][0], y1), rect(NOTCHES[1][1], y0, L, y1)];
+
+  const root = new THREE.Group();
+  root.position.set(-L / 2, -H / 2, -FB / 2);
+  scene.add(root);
+
+  const n = NOTCHES, ny = NOTCH_Y;
+  root.add(plate(poly([[0,0],[L,0],[L,H],[n[1][1],H],[n[1][1],ny],[n[1][0],ny],[n[1][0],H],[n[0][1],H],[n[0][1],ny],[n[0][0],ny],[n[0][0],H],[0,H]]), 'web'));
+
+  const P = {};
+  function pivot(name, parent, pos, axis, sign, shapes) {
+    const g = new THREE.Group(); g.position.set(pos[0], pos[1], pos[2]);
+    g.add(plate(shapes, name)); parent.add(g);
+    P[name] = { g, axis, sign };
+    return g;
+  }
+  const bot = new THREE.Shape();
+  bot.moveTo(0, -FB); bot.lineTo(HALF.x - HALF.r, -FB);
+  bot.absarc(HALF.x, -FB, HALF.r, Math.PI, 0, true);
+  bot.lineTo(L, -FB); bot.lineTo(L, 0); bot.lineTo(0, 0); bot.closePath();
+  pivot('botFl', root, [0, 0, 0], 'x', -1, bot);
+  const top = pivot('topFl', root, [0, H, 0], 'x', 1, strips(0, FT));
+  pivot('lip', top, [0, FT, 0], 'x', 1, strips(0, LIP));
+
+  const STEPS = [
+    { part: null, title: 'Flan découpé laser', text: 'Développé à plat avec les 2 crans et le demi-rond. Les 3 plis sont UP : même face vers le haut du début à la fin.',
+      gauge: '—', after: ['Flan 894 × 162,63 (plan : 152,63, à confirmer)', 'Crans ≈ 100 de large, ≈ 93 de profondeur', 'Demi-rond R ≈ 20 sur le bord de l\'aile basse'] },
+    { part: 'lip', title: 'Pli 1 · retour 20', text: 'Pièce à plat, bord du retour contre la butée. Mettre les doigts de butée sur les parties pleines, pas dans les crans.',
+      gauge: '17,11 (bord du retour)', after: ['Retour 20 ext.', 'Angle 90° sur les 3 tronçons', 'Largeur à plat 148,41 (bord aile basse → ext. retour)'] },
+    { part: 'topFl', title: 'Pli 2 · aile haute 30', text: 'Même face en haut. Le retour de 20 est debout, sa face extérieure contre la butée.',
+      gauge: '27,10 (ext. du retour)', after: ['Aile haute 30 ext.', 'Retour 20', 'Angle 90°', 'Largeur à plat 124,20 (bord aile basse → ext. aile haute)'] },
+    { part: 'botFl', title: 'Pli 3 · aile basse 50', text: 'Dernier pli, la pièce se ferme en C. Bord de l\'aile basse contre la butée, doigts loin du demi-rond. Col de cygne : l\'aile haute revient au-dessus du poinçon.',
+      gauge: '47,11 (bord aile basse)', after: ['Hauteur 80', 'Aile basse 50, aile haute 30, retour 20', '25 sous les crans', 'Jour retour / aile basse ≈ 57', 'Rectitude sur 894'] }
+  ];
+  const ORDER = STEPS.slice(1).map(s => s.part);
+  const angle = {}; ORDER.forEach(k => angle[k] = 0);
+  let step = 0, anim = null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function targetsFor(k) { const t = {}; ORDER.forEach((p, i) => t[p] = i < k ? 1 : 0); return t; }
+  function applyAngles() { ORDER.forEach(k => { const p = P[k]; p.g.rotation[p.axis] = p.sign * D90 * angle[k]; }); }
+  function highlight() {
+    const active = STEPS[step].part;
+    const accent = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1f5fd1');
+    Object.keys(meshes).forEach(k => meshes[k].material.color.set(k === active ? accent : new THREE.Color(steel)));
+  }
+  function go(k) {
+    step = Math.max(0, Math.min(STEPS.length - 1, k));
+    const from = Object.assign({}, angle), to = targetsFor(step);
+    const t0 = performance.now(), dur = reduce ? 0 : 900;
+    anim = (now) => {
+      const u = dur ? Math.min(1, (now - t0) / dur) : 1;
+      const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      ORDER.forEach(p => angle[p] = from[p] + (to[p] - from[p]) * e);
+      applyAngles();
+      if (u >= 1) anim = null;
+    };
+    updateUI();
+  }
+  const $ = id => document.getElementById(id);
+  const dots = $('dots');
+  for (let i = 1; i < STEPS.length; i++) dots.appendChild(document.createElement('span'));
+  function updateUI() {
+    $('stepNo').textContent = 'ÉTAPE ' + step + ' / ' + (STEPS.length - 1);
+    $('stepTitle').textContent = STEPS[step].title;
+    $('stepText').textContent = STEPS[step].text;
+    $('stepGauge').textContent = STEPS[step].gauge;
+    const ul = $('stepAfter'); ul.textContent = '';
+    STEPS[step].after.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    $('bPrev').disabled = step === 0;
+    $('bNext').disabled = step === STEPS.length - 1;
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i < step));
+    highlight();
+  }
+  $('bNext').onclick = () => go(step + 1);
+  $('bPrev').onclick = () => go(step - 1);
+  $('bFlat').onclick = () => go(0);
+  $('bDone').onclick = () => go(STEPS.length - 1);
+  function view(name) {
+    const pos = { iso: [520, 380, 700], face: [0, 0, 1250], prof: [1500, 20, 0] }[name];
+    camera.position.set(pos[0], pos[1], pos[2]);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }
+  $('v-iso').onclick = () => view('iso');
+  $('v-face').onclick = () => view('face');
+  $('v-prof').onclick = () => { if (step < STEPS.length - 1) go(STEPS.length - 1); view('prof'); };
+  function applyTheme() {
+    const edge = getComputedStyle(document.documentElement).getPropertyValue('--edge').trim();
+    if (edge) lineMat.color.set(edge);
+    highlight();
+  }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  function loop(now) { if (anim) anim(now); controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); }
+  view('iso');
+  go(STEPS.length - 1);
+  applyTheme();
+  requestAnimationFrame(loop);
+})();
+</script>
