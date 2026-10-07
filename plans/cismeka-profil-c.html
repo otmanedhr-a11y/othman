@@ -1,0 +1,371 @@
+<title>CISMEKA Profil C 713</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: atelier sheet — 3D viewer with bend stepper on top, then the routing card (gamme) as a table, assumptions last. */
+:root {
+  --bg: #eef0f2;
+  --panel: #ffffff;
+  --ink: #1b2129;
+  --muted: #5d6773;
+  --line: #d3d8de;
+  --accent: #1f5fd1;      /* layout-fluid blue */
+  --accent-soft: #e3ecfb;
+  --warn: #9a5b00;
+  --warn-soft: #fff3df;
+  --viewer: #e4e8ec;
+  --edge: #2a3038;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+    --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+    --viewer: #20272f; --edge: #0b0e12; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+  --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+  --viewer: #20272f; --edge: #0b0e12; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 600; font-size: 24px; margin: 0; letter-spacing: .01em; }
+.specs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { font-family: var(--f-mono); font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); font-variant-numeric: tabular-nums; }
+.chip b { font-weight: 500; color: var(--accent); }
+.chip.est { border-style: dashed; }
+
+.viewer { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: grid; }
+#stage { position: relative; height: clamp(320px, 56vh, 560px); background: var(--viewer); touch-action: none; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+.views { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; }
+.views button { font-family: var(--f-mono); font-size: 12px; padding: 4px 9px; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: var(--muted); }
+.stepper { display: grid; gap: 12px; padding: 14px 16px 16px; border-top: 1px solid var(--line); }
+.step-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.step-no { font-family: var(--f-mono); font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.step-title { font-family: var(--f-display); font-size: 22px; font-weight: 600; }
+.step-text { margin: 0; color: var(--muted); max-width: 70ch; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: inherit; font-size: 14px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 600; }
+button:disabled { opacity: .45; cursor: default; }
+.dots { display: flex; gap: 4px; margin-left: auto; }
+.dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
+.dots span.on { background: var(--accent); }
+
+section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px 16px; display: grid; gap: 14px; min-width: 0; }
+ol.ops { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: op; }
+ol.ops li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; min-width: 0; }
+ol.ops li::before { counter-increment: op; content: "OP " counter(op, decimal-leading-zero); font-family: var(--f-mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+ol.ops h3 { margin: 0; font-size: 16px; font-weight: 600; }
+ol.ops p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dir { font-family: var(--f-mono); font-size: 12px; padding: 1px 7px; border-radius: 3px; white-space: nowrap; }
+.dir.up { background: var(--accent-soft); color: var(--accent); }
+.dir.down { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.note { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 12px 14px; border-radius: 4px; display: grid; gap: 6px; }
+.note h3 { margin: 0; font-size: 14px; color: var(--warn); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+.note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Plan CISMEKA · tôle pliée · développé 713 × 360,27</div>
+    <h1>Profil C à retours avec pattes de fixation</h1>
+    <div class="specs">
+      <span class="chip">Longueur <b>713</b></span>
+      <span class="chip">Hauteur <b>230</b></span>
+      <span class="chip">Aile <b>40</b></span>
+      <span class="chip">Retour <b>35</b></span>
+      <span class="chip">Pattes <b>30</b> · 2×Ø9</span>
+      <span class="chip">Plis <b>6 × 90° R3</b></span>
+      <span class="chip est">Épaisseur <b>2,5</b> (hypothèse)</span>
+    </div>
+  </header>
+
+  <div class="viewer">
+    <div id="stage">
+      <div class="views">
+        <button type="button" id="v-iso">Iso</button>
+        <button type="button" id="v-face">Face</button>
+        <button type="button" id="v-prof">Profil</button>
+      </div>
+      <div class="hint">Glisser pour tourner · molette / pincer pour zoomer</div>
+    </div>
+    <div class="stepper">
+      <div class="step-head">
+        <span class="step-no" id="stepNo">ÉTAPE 0 / 6</span>
+        <span class="step-title" id="stepTitle"></span>
+      </div>
+      <p class="step-text" id="stepText"></p>
+      <div class="controls">
+        <button type="button" id="bFlat">Plat</button>
+        <button type="button" id="bPrev">◀ Précédent</button>
+        <button type="button" id="bNext" class="primary">Pli suivant ▶</button>
+        <button type="button" id="bDone">Pièce finie</button>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>Gamme de fabrication</h2>
+    <ol class="ops">
+      <li><div><h3>Découpe laser du développé</h3><p>Flan 713 × 360,27 avec les deux crans d'extrémité, les fentes de dégagement entre pattes et partie haute, et les 4 trous Ø9 (2 par patte). Le texte CISMEKA est en gravure / marquage laser, pas découpé (les lettres fermées tomberaient).</p></div></li>
+      <li><div><h3>Ébavurage</h3><p>Casser les arêtes, surtout dans les crans et autour des trous Ø9. Vérifier la planéité avant pliage.</p></div></li>
+      <li><div><h3>Pliage presse plieuse : 6 plis</h3><p>Pattes d'abord tant que la pièce est à plat, puis retourner et faire les retours avant les ailes. Détail dans le tableau ci-dessous.</p></div></li>
+      <li><div><h3>Contrôle</h3><p>Hauteur hors-tout 230, ailes 40, retours 35, pattes 30, équerrage des 6 plis à 90°, entraxe et position des trous Ø9.</p></div></li>
+    </ol>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Pli</th><th>Désignation</th><th>Sens</th><th>Longueur pliée</th><th>Cote développé</th><th>Outillage</th><th>Remarque</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Patte gauche</td><td><span class="dir up">UP 90°</span></td><td class="num">≈ 130</td><td class="num">27,53</td><td>Poinçon segmenté court ≈ 120, matrice V16–V20</td><td>Pièce à plat, face gravée vers le haut</td></tr>
+          <tr><td class="num">2</td><td>Patte droite</td><td><span class="dir up">UP 90°</span></td><td class="num">≈ 130</td><td class="num">27,53</td><td>Idem pli 1</td><td>Même réglage, tourner la pièce</td></tr>
+          <tr><td class="num">3</td><td>Retour haut</td><td><span class="dir down">DOWN 90°</span></td><td class="num">713</td><td class="num">32,53</td><td>Poinçon droit, V16–V20</td><td>Retourner la pièce : pattes vers le bas</td></tr>
+          <tr><td class="num">4</td><td>Retour bas</td><td><span class="dir down">DOWN 90°</span></td><td class="num">≈ 607</td><td class="num">32,53</td><td>Idem pli 3</td><td>Même butée que pli 3</td></tr>
+          <tr><td class="num">5</td><td>Aile haute</td><td><span class="dir down">DOWN 90°</span></td><td class="num">713</td><td class="num">67,60</td><td>Poinçon col de cygne</td><td>Le retour de 35 remonte vers le poinçon</td></tr>
+          <tr><td class="num">6</td><td>Aile basse</td><td><span class="dir down">DOWN 90°</span></td><td class="num">≈ 607</td><td class="num">67,60</td><td>Col de cygne + outillage segmenté ≤ 600</td><td>Les pattes pendent juste au bout de ce pli : l'outil doit s'arrêter entre les deux pattes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Lecture du plan</h2>
+      <dl>
+        <dt>Retour (développé)</dt><dd>32,53 → 35 fini</dd>
+        <dt>Aile (développé)</dt><dd>35,07 → 40 fini</dd>
+        <dt>Âme (développé)</dt><dd>225,07 → 230 fini</dd>
+        <dt>Patte (développé)</dt><dd>27,53 → 30 fini</dd>
+        <dt>Déduction par pli</dt><dd>≈ 4,93</dd>
+        <dt>Masse (acier 2,5)</dt><dd>≈ 4,8 kg</dd>
+      </dl>
+    </section>
+    <div class="note">
+      <h3>À confirmer avant lancement</h3>
+      <ul>
+        <li>Épaisseur et matière : absentes de la photo. La déduction de 4,93 par pli à R3 correspond à 2,5 mm (K ≈ 0,35) ou 3 mm (K = 0,5).</li>
+        <li>Si la déduction réelle de votre plieuse est différente, refaire le développé, sinon les cotes 35 / 40 / 230 ne tomberont pas.</li>
+        <li>Cotes lues à l'échelle sur la photo (non cotées) : partie basse ≈ 607, pattes ≈ 130 de haut, entraxe trous ≈ 70, décalage partie haute ≈ 53 de chaque côté.</li>
+        <li>Le modèle 3D est à angles vifs ; les plis réels sont à R3.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  // ---- dimensions (mm, finished outer) ----
+  const L = 713, H = 230, FL = 40, LIP = 35, TAB = 30, T = 2.5;
+  const OFF = 53;            // lower part inset each side (estimated)
+  const LOW = 137;           // height of lower web zone (tabs side)
+  const TAB_Y0 = 4, TAB_Y1 = 134, HOLE_R = 4.5, HOLES = [34, 104];
+  const D90 = Math.PI / 2;
+
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.prepend(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 1, 10000);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.target.set(0, 0, 0);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6a7284, 1.0));
+  const d1 = new THREE.DirectionalLight(0xffffff, 0.85); d1.position.set(500, 700, 900); scene.add(d1);
+  const d2 = new THREE.DirectionalLight(0xffffff, 0.35); d2.position.set(-700, 200, -600); scene.add(d2);
+
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x2a3038 });
+  const steel = 0xb9c0c8;
+  const meshes = {};
+
+  function plate(shape, name) {
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: T, bevelEnabled: false, curveSegments: 28 });
+    geo.translate(0, 0, -T);
+    const mat = new THREE.MeshStandardMaterial({ color: steel, metalness: 0.55, roughness: 0.42, side: THREE.DoubleSide });
+    const m = new THREE.Mesh(geo, mat);
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), lineMat));
+    meshes[name] = m;
+    return m;
+  }
+  function rect(x0, y0, x1, y1) {
+    const s = new THREE.Shape();
+    s.moveTo(x0, y0); s.lineTo(x1, y0); s.lineTo(x1, y1); s.lineTo(x0, y1); s.closePath();
+    return s;
+  }
+
+  const root = new THREE.Group();
+  root.position.set(-L / 2, -H / 2, 20);
+  scene.add(root);
+
+  // web (âme) with stepped ends
+  const web = new THREE.Shape();
+  [[OFF,0],[L-OFF,0],[L-OFF,LOW],[L,LOW],[L,H],[0,H],[0,LOW],[OFF,LOW]].forEach((p,i)=> i ? web.lineTo(p[0],p[1]) : web.moveTo(p[0],p[1]));
+  web.closePath();
+  root.add(plate(web, 'web'));
+
+  // engraved text
+  const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 170;
+  const cx = cv.getContext('2d');
+  cx.font = '700 150px "Barlow Condensed", Arial Narrow, sans-serif';
+  cx.textAlign = 'center'; cx.textBaseline = 'middle';
+  cx.lineWidth = 6; cx.strokeStyle = '#3a414b';
+  cx.strokeText('CISMEKA', 512, 90);
+  const tex = new THREE.CanvasTexture(cv);
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(242, 40), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+  label.position.set(L / 2, 182, 0.4);
+  root.add(label);
+
+  // pivots: { group, axis, sign }
+  const P = {};
+  function pivot(name, parent, pos, axis, sign, shape) {
+    const g = new THREE.Group(); g.position.set(pos[0], pos[1], pos[2]);
+    g.add(plate(shape, name)); parent.add(g);
+    P[name] = { g, axis, sign };
+    return g;
+  }
+  const flT = pivot('flT', root, [0, H, 0], 'x', -1, rect(0, 0, L, FL));
+  pivot('lipT', flT, [0, FL, 0], 'x', -1, rect(0, 0, L, LIP));
+  const flB = pivot('flB', root, [0, 0, 0], 'x', 1, rect(OFF, -FL, L - OFF, 0));
+  pivot('lipB', flB, [0, -FL, 0], 'x', 1, rect(OFF, -LIP, L - OFF, 0));
+
+  function tabShape(x0, x1, hx) {
+    const s = rect(x0, TAB_Y0, x1, TAB_Y1);
+    HOLES.forEach(y => { const h = new THREE.Path(); h.absarc(hx, y, HOLE_R, 0, Math.PI * 2, true); s.holes.push(h); });
+    return s;
+  }
+  pivot('tabL', root, [OFF, 0, 0], 'y', 1, tabShape(-TAB, 0, -TAB / 2));
+  pivot('tabR', root, [L - OFF, 0, 0], 'y', -1, tabShape(0, TAB, TAB / 2));
+
+  // ---- bend sequence ----
+  const STEPS = [
+    { part: null, title: 'Flan découpé laser', text: 'Développé 713 × 360,27 à plat, vu côté face gravée. Trous Ø9 et crans déjà découpés.' },
+    { part: 'tabL', title: 'Pli 1 · patte gauche UP 90°', text: 'Pièce à plat, face gravée vers le haut. Poinçon segmenté court sur la longueur de la patte seulement : la partie haute qui dépasse ne doit pas être prise.' },
+    { part: 'tabR', title: 'Pli 2 · patte droite UP 90°', text: 'Même réglage et même butée (27,53). Tourner la pièce de 180°.' },
+    { part: 'lipT', title: 'Pli 3 · retour haut DOWN 90°', text: 'Retourner la pièce : les pattes pointent maintenant vers le bas. Butée à 32,53 du bord, pli sur 713.' },
+    { part: 'lipB', title: 'Pli 4 · retour bas DOWN 90°', text: 'Même butée. Pli sur ≈ 607 seulement ; les pattes restent hors de l\'outil.' },
+    { part: 'flT', title: 'Pli 5 · aile haute DOWN 90°', text: 'Poinçon col de cygne : le retour de 35 remonte vers le poinçon pendant le pli. Cote développé 67,60 depuis le bord.' },
+    { part: 'flB', title: 'Pli 6 · aile basse DOWN 90°', text: 'Dernier pli, la pièce se ferme en C. Outillage segmenté ≤ 600 pour passer entre les deux pattes, col de cygne pour dégager le retour.' }
+  ];
+  const ORDER = STEPS.slice(1).map(s => s.part);
+  const angle = {}; ORDER.forEach(k => angle[k] = 0);
+  let step = 0, anim = null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function targetsFor(n) { const t = {}; ORDER.forEach((k, i) => t[k] = i < n ? 1 : 0); return t; }
+  function applyAngles() {
+    ORDER.forEach(k => { const p = P[k]; p.g.rotation[p.axis] = p.sign * D90 * angle[k]; });
+  }
+  function highlight() {
+    const active = STEPS[step].part;
+    const accent = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1f5fd1');
+    Object.keys(meshes).forEach(k => meshes[k].material.color.set(k === active ? accent : new THREE.Color(steel)));
+  }
+  function go(n) {
+    step = Math.max(0, Math.min(STEPS.length - 1, n));
+    const from = Object.assign({}, angle), to = targetsFor(step);
+    const t0 = performance.now(), dur = reduce ? 0 : 900;
+    anim = (now) => {
+      const u = dur ? Math.min(1, (now - t0) / dur) : 1;
+      const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      ORDER.forEach(k => angle[k] = from[k] + (to[k] - from[k]) * e);
+      applyAngles();
+      if (u >= 1) anim = null;
+    };
+    updateUI();
+  }
+
+  const $ = id => document.getElementById(id);
+  const dots = $('dots');
+  for (let i = 1; i < STEPS.length; i++) dots.appendChild(document.createElement('span'));
+  function updateUI() {
+    $('stepNo').textContent = 'ÉTAPE ' + step + ' / ' + (STEPS.length - 1);
+    $('stepTitle').textContent = STEPS[step].title;
+    $('stepText').textContent = STEPS[step].text;
+    $('bPrev').disabled = step === 0;
+    $('bNext').disabled = step === STEPS.length - 1;
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i < step));
+    highlight();
+  }
+  $('bNext').onclick = () => go(step + 1);
+  $('bPrev').onclick = () => go(step - 1);
+  $('bFlat').onclick = () => go(0);
+  $('bDone').onclick = () => go(STEPS.length - 1);
+
+  // ---- views ----
+  function view(name) {
+    const d = 980;
+    const pos = { iso: [d * .62, d * .42, d * .72], face: [0, 0, d * 1.05], prof: [d * 1.0, 40, -20] }[name];
+    camera.position.set(pos[0], pos[1], pos[2]);
+    controls.target.set(0, 0, name === 'prof' ? -20 : 0);
+    controls.update();
+  }
+  $('v-iso').onclick = () => view('iso');
+  $('v-face').onclick = () => view('face');
+  $('v-prof').onclick = () => { if (step < STEPS.length - 1) go(STEPS.length - 1); view('prof'); };
+
+  // ---- theme ----
+  function applyTheme() {
+    const edge = getComputedStyle(document.documentElement).getPropertyValue('--edge').trim();
+    if (edge) lineMat.color.set(edge);
+    highlight();
+  }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---- size & loop ----
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stage);
+  resize();
+
+  function loop(now) {
+    if (anim) anim(now);
+    controls.update();
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+
+  view('iso');
+  go(STEPS.length - 1);       // open on the finished part
+  applyTheme();
+  requestAnimationFrame(loop);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    cx.font = '700 150px "Barlow Condensed", Arial Narrow, sans-serif';
+    cx.strokeText('CISMEKA', 512, 90); tex.needsUpdate = true;
+  });
+})();
+</script>
