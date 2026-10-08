@@ -33,5 +33,9 @@ Sans attendre qu'il le demande, livrer automatiquement :
 
 Rangement : un fichier par pièce dans `plans/<nom-piece>.html`.
 
+Sens de pli : toujours en anglais, **UP** / **DOWN**, dans les pages et dans
+les réponses, même si le plan écrit BAS / HAUT (BAS → DOWN, HAUT → UP).
+Signaler une fois que le plan utilise BAS / HAUT.
+
 Langue : répondre en darija (comme l'utilisateur) ; termes techniques et pages
 de fabrication en français, comme sur les plans.
