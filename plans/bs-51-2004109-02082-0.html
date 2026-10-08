@@ -1,0 +1,366 @@
+<title>Cornière 45° BS 02082</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: atelier sheet — 3D viewer with bend stepper on top, then the routing card (gamme) as a table, assumptions last. */
+:root {
+  --bg: #eef0f2;
+  --panel: #ffffff;
+  --ink: #1b2129;
+  --muted: #5d6773;
+  --line: #d3d8de;
+  --accent: #1f5fd1;      /* layout-fluid blue */
+  --accent-soft: #e3ecfb;
+  --warn: #9a5b00;
+  --warn-soft: #fff3df;
+  --viewer: #e4e8ec;
+  --edge: #2a3038;
+  --bend: #d0502a;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+    --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+    --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+  --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+  --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 600; font-size: 24px; margin: 0; letter-spacing: .01em; }
+.specs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { font-family: var(--f-mono); font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); font-variant-numeric: tabular-nums; }
+.chip b { font-weight: 500; color: var(--accent); }
+.chip.est { border-style: dashed; }
+
+.viewer { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: grid; }
+#stage { position: relative; height: clamp(320px, 56vh, 560px); background: var(--viewer); touch-action: none; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+.views { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; }
+.views button { font-family: var(--f-mono); font-size: 12px; padding: 4px 9px; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: var(--muted); }
+.stepper { display: grid; gap: 12px; padding: 14px 16px 16px; border-top: 1px solid var(--line); }
+.step-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.step-no { font-family: var(--f-mono); font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.step-title { font-family: var(--f-display); font-size: 22px; font-weight: 600; }
+.step-text { margin: 0; color: var(--muted); max-width: 70ch; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: inherit; font-size: 14px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 600; }
+button:disabled { opacity: .45; cursor: default; }
+.checks { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 10px 20px; padding: 12px 14px; background: var(--accent-soft); border-radius: 4px; }
+.checks span { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.checks b { font-family: var(--f-mono); font-weight: 500; font-size: 15px; font-variant-numeric: tabular-nums; }
+.checks ul { margin: 2px 0 0; padding-left: 18px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.checks .after { min-width: 0; }
+@media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
+
+.dia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.dia { display: grid; gap: 6px; min-width: 0; }
+.dia h3 { margin: 0; font-size: 14px; font-family: var(--f-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dia .svgwrap { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.dia svg { display: block; width: 100%; min-width: 300px; height: auto; }
+.dia.wide svg { min-width: 560px; }
+.dia .cap { margin: 0; font-size: 13px; color: var(--muted); }
+svg .o { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.5; }
+svg .p { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: miter; }
+svg .ft { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.2; }
+svg .ghost { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+svg .b { stroke: var(--bend); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+svg .d { stroke: var(--muted); stroke-width: 1; fill: none; }
+svg .hole { fill: var(--bg); stroke: var(--ink); stroke-width: 1; }
+svg text { font-family: var(--f-mono); font-size: 12px; fill: var(--ink); }
+svg text.m { fill: var(--muted); font-size: 11px; }
+svg text.s { fill: var(--bend); font-size: 10px; }
+svg.lg text { font-size: 17px; }
+svg.lg text.m { font-size: 15px; }
+svg text.big { font-size: 14px; font-weight: 500; }
+svg .nb circle { fill: var(--bend); }
+svg .nb text { fill: #fff; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
+.dots { display: flex; gap: 4px; margin-left: auto; }
+.dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
+.dots span.on { background: var(--accent); }
+
+section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px 16px; display: grid; gap: 14px; min-width: 0; }
+ol.ops { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: op; }
+ol.ops li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; min-width: 0; }
+ol.ops li::before { counter-increment: op; content: "OP " counter(op, decimal-leading-zero); font-family: var(--f-mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+ol.ops h3 { margin: 0; font-size: 16px; font-weight: 600; }
+ol.ops p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dir { font-family: var(--f-mono); font-size: 12px; padding: 1px 7px; border-radius: 3px; white-space: nowrap; }
+.dir.up { background: var(--accent-soft); color: var(--accent); }
+.dir.down { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.note { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 12px 14px; border-radius: 4px; display: grid; gap: 6px; }
+.note h3 { margin: 0; font-size: 14px; color: var(--warn); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+.note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Plan 51-2004109-02082-0 · BS Technique · S275JR (1.0044) ép. 1,5 · finition RAL</div>
+    <h1>Cornière pliée à 45° 1350</h1>
+    <div class="specs">
+      <span class="chip">Longueur <b>1350</b></span>
+      <span class="chip">Hors-tout <b>76,50 × 71,50</b></span>
+      <span class="chip">Aile <b>16,38</b></span>
+      <span class="chip">Retour <b>11,38</b></span>
+      <span class="chip">Plis <b>2 × BAS 45° R1,5</b></span>
+      <span class="chip">Développé <b>1350 × 112,07</b></span>
+      <span class="chip">Trous <b>8 × Ø4,5 + 5 × Ø≈20</b></span>
+    </div>
+  </header>
+
+  <div class="viewer">
+    <div id="stage">
+      <div class="views">
+        <button type="button" id="v-iso">Iso</button>
+        <button type="button" id="v-face">Face</button>
+        <button type="button" id="v-prof">Profil</button>
+      </div>
+      <div class="hint">Glisser pour tourner · molette / pincer pour zoomer</div>
+    </div>
+    <div class="stepper">
+      <div class="step-head">
+        <span class="step-no" id="stepNo">ÉTAPE 0 / 2</span>
+        <span class="step-title" id="stepTitle"></span>
+      </div>
+      <p class="step-text" id="stepText"></p>
+      <div class="checks">
+        <div class="gauge"><span>Butée</span><b id="stepGauge"></b></div>
+        <div class="after"><span>Cotes à mesurer après ce pli</span><ul id="stepAfter"></ul></div>
+      </div>
+      <div class="controls">
+        <button type="button" id="bFlat">Plat</button>
+        <button type="button" id="bPrev">◀ Précédent</button>
+        <button type="button" id="bNext" class="primary">Pli suivant ▶</button>
+        <button type="button" id="bDone">Pièce finie</button>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>Avant et après pliage</h2>
+    <div class="dia wide">
+      <h3>Avant pliage · développé 1350 × 112,07</h3>
+      <div class="svgwrap"><svg viewBox="0 0 820 300" role="img" aria-label="Développé avec lignes de pli"><rect class="o" x="60.0" y="60.0" width="580.0" height="179.3"/><circle class="hole" cx="148.1" cy="153.6" r="7"/><circle class="hole" cx="182.9" cy="153.6" r="7"/><circle class="hole" cx="217.7" cy="153.6" r="7"/><circle class="hole" cx="252.5" cy="153.6" r="7"/><circle class="hole" cx="287.3" cy="153.6" r="7"/><circle class="hole" cx="92.2" cy="72.8" r="2.4"/><circle class="hole" cx="92.2" cy="229.7" r="2.4"/><circle class="hole" cx="264.1" cy="72.8" r="2.4"/><circle class="hole" cx="264.1" cy="229.7" r="2.4"/><circle class="hole" cx="435.9" cy="72.8" r="2.4"/><circle class="hole" cx="435.9" cy="229.7" r="2.4"/><circle class="hole" cx="607.7" cy="72.8" r="2.4"/><circle class="hole" cx="607.7" cy="229.7" r="2.4"/><line class="b" x1="60.0" y1="87.6" x2="640.0" y2="87.6"/><text class="s" x="420" y="83.6" text-anchor="middle">BAS 45° R1,5</text><line class="b" x1="60.0" y1="219.7" x2="640.0" y2="219.7"/><text class="s" x="420" y="215.7" text-anchor="middle">BAS 45° R1,5</text><g class="nb"><circle cx="618.0" cy="219.7" r="9"/><text x="618.0" y="219.7">1</text></g><g class="nb"><circle cx="618.0" cy="87.6" r="9"/><text x="618.0" y="87.6">2</text></g><text x="52" y="64.0" text-anchor="end">0</text><text x="52" y="91.6" text-anchor="end">17,26</text><text x="52" y="223.7" text-anchor="end">99,81</text><text x="52" y="243.3" text-anchor="end">112,07</text><text x="652" y="77.8">17,26</text><text class="m" x="700" y="77.8">aile</text><text x="652" y="157.6">82,55</text><text class="m" x="700" y="157.6">âme inclinée</text><text x="652" y="233.6">12,26</text><text class="m" x="700" y="233.6">retour</text><text class="m" x="217.7" y="177.6" text-anchor="middle">5 × Ø ≈ 20, pas ≈ 81</text><text class="m" x="350.0" y="50" text-anchor="middle">8 × Ø4,5 à 75 / 475 / 875 / 1275</text><path class="d" d="M60.0 278H639.9599999999999M60.0 273v10M639.9599999999999 273v10"/><text x="350.0" y="272" text-anchor="middle">1350</text></svg></div>
+      <p class="cap">Traits rouges = lignes de pli (BAS 45° R1,5), numéro = ordre de pliage. À gauche : distance depuis le bord de l'aile. À droite : largeur de chaque bande. Schéma pas à l'échelle.</p>
+    </div>
+    <div class="dia-grid">
+      <div class="dia">
+        <h3>Après pliage · coupe</h3>
+        <div class="svgwrap"><svg viewBox="0 0 400 330" style="max-width:440px;margin:0 auto" role="img" aria-label="Coupe après pliage">
+<polyline class="p" points="60,60 115,60 298,243 298,279"/>
+<g class="nb"><circle cx="115.0" cy="60.0" r="9"/><text x="115.0" y="60.0">2</text></g><g class="nb"><circle cx="298.0" cy="243.0" r="9"/><text x="298.0" y="243.0">1</text></g>
+<path class="d" d="M60 40H115M60 35v10M115 35v10"/><text x="87.5" y="34" text-anchor="middle">16,38</text><path class="d" d="M60 306H298M60 301v10M298 301v10"/><text x="179.0" y="322" text-anchor="middle">76,50</text><path class="d" d="M345 57V279M340 57h10M340 279h10"/><text x="355" y="172.0" text-anchor="start">71,50</text><path class="d" d="M318 243V279M313 243h10M313 279h10"/><text x="326" y="265.0" text-anchor="start">11,38</text>
+<text class="m" x="150" y="84">45°</text><text class="m" x="268" y="226" text-anchor="end">45°</text>
+<text class="m" x="196" y="140" text-anchor="end">âme</text>
+</svg></div>
+        <p class="cap">16,38 et 11,38 sont les parties droites (avant l'arrondi). Bande 17,26 → aile 16,38 droite ; 12,26 → retour 11,38 droit ; 82,55 → âme à 45°. Hors-tout 76,50 × 71,50, aile et retour à 90° l'un de l'autre.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Gamme de fabrication</h2>
+    <ol class="ops">
+      <li><div><h3>Découpe laser du développé</h3><p>Tôle S275JR ép. 1,5. Flan 1350 × 112,07, 8 trous Ø4,5 (4 dans l'aile, 4 dans le retour) et 5 gros trous dans l'âme près d'un bout.</p></div></li>
+      <li><div><h3>Ébavurage</h3><p>Trous et arêtes de coupe.</p></div></li>
+      <li><div><h3>Pliage presse plieuse : 2 plis BAS 45° R1,5 sur 1350</h3><p>Ordre : retour → aile. Même face vers le haut. Matrice V10 (R int ≈ 1,5 en ép. 1,5). Pli à 45° en l'air : régler l'angle sur la première pièce avec un rapporteur ou un gabarit 135°, le retour élastique est plus sensible qu'à 90°.</p></div></li>
+      <li><div><h3>Contrôle puis peinture RAL</h3><p>76,50 × 71,50, aile perpendiculaire au retour, rectitude et vrillage sur 1350. Teinte RAL non indiquée.</p></div></li>
+    </ol>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ordre</th><th>Pli</th><th>Longueur pliée</th><th>Position pièce</th><th>Butée</th><th>Outillage</th><th>Cotes à mesurer après le pli</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Retour, BAS 45°</td><td class="num">1350</td><td>À plat, bord du retour contre la butée</td><td class="num">12,26<br>bord du retour</td><td>Poinçon droit, V10</td><td>Angle 45° (135° entre âme et retour) · partie droite du retour 11,38 · largeur hors-tout ≈ 109 (indicatif)</td></tr>
+          <tr><td class="num">2</td><td>Aile, BAS 45°</td><td class="num">1350</td><td>Tourner la pièce, bord de l'aile contre la butée</td><td class="num">17,26<br>bord de l'aile</td><td>Poinçon droit, V10</td><td>Hors-tout 76,50 × 71,50 · aile 16,38 · retour 11,38 · aile ⟂ retour</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Lecture du plan</h2>
+      <dl>
+        <dt>Aile (développé)</dt><dd>17,26 → 16,38 droit</dd>
+        <dt>Âme (développé)</dt><dd>82,55 → 80,78 droit à 45°</dd>
+        <dt>Retour (développé)</dt><dd>12,26 → 11,38 droit</dd>
+        <dt>Allongement par pli 45°</dt><dd>1,77 (ép. 1,5, R1,5, K = 0,5)</dd>
+        <dt>Contrôle de calcul</dt><dd>76,50 × 71,50 retrouvés</dd>
+        <dt>Masse</dt><dd>≈ 1,8 kg (plan : 0,0 kg, non rempli)</dd>
+      </dl>
+    </section>
+    <div class="note">
+      <h3>À confirmer avant lancement</h3>
+      <ul>
+        <li>La vue pliée est cotée 1344, le développé 1350. Les plis sont dans la longueur, donc la longueur ne doit pas changer. Vérifier sur le DXF si une bande est raccourcie aux bouts (≈ 3 de chaque côté). Cette page garde 1350.</li>
+        <li>Diamètre des 5 gros trous non coté sur la photo : ≈ 20, pas ≈ 81, à partir de ≈ 205 d'un bout (lu à l'échelle).</li>
+        <li>Les 8 Ø4,5 sont aux mêmes entraxes que les M4 du profil 02081 (75 / 475 / 875 / 1275) : cette pièce se visse probablement dessus. Vérifier le côté et la position exacte sur le DXF.</li>
+        <li>Quantité et teinte RAL non remplies au cartouche.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const L = 1350, W = 82.55, FL = 17.26, LIP = 12.26, T = 1.5;
+  const BIG = [205, 286, 367, 448, 529], SM = [75, 475, 875, 1275];
+  const D45 = Math.PI / 4;
+
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.prepend(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 1, 20000);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6a7284, 1.0));
+  const d1 = new THREE.DirectionalLight(0xffffff, 0.85); d1.position.set(600, 900, 1200); scene.add(d1);
+  const d2 = new THREE.DirectionalLight(0xffffff, 0.35); d2.position.set(-900, 200, -800); scene.add(d2);
+
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x2a3038 });
+  const steel = 0xb9c0c8;
+  const meshes = {};
+  function plate(shape, name) {
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: T, bevelEnabled: false, curveSegments: 20 });
+    geo.translate(0, 0, -T);
+    const mat = new THREE.MeshStandardMaterial({ color: steel, metalness: 0.55, roughness: 0.42, side: THREE.DoubleSide });
+    const m = new THREE.Mesh(geo, mat);
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), lineMat));
+    meshes[name] = m;
+    return m;
+  }
+  function rect(x0, y0, x1, y1) { const s = new THREE.Shape(); s.moveTo(x0,y0); s.lineTo(x1,y0); s.lineTo(x1,y1); s.lineTo(x0,y1); s.closePath(); return s; }
+  function circ(x, y, r) { const p = new THREE.Path(); p.absarc(x, y, r, 0, Math.PI * 2, true); return p; }
+
+  const outer = new THREE.Group(); scene.add(outer);       // tilts the part so the aile ends horizontal, like the drawing
+  const root = new THREE.Group(); root.position.set(-L / 2, -W / 2, 0); outer.add(root);
+
+  const web = rect(0, 0, L, W); BIG.forEach(x => web.holes.push(circ(x, W / 2, 10)));
+  root.add(plate(web, 'web'));
+  const P = {};
+  function pivot(name, pos, sign, shape) {
+    const g = new THREE.Group(); g.position.set(pos[0], pos[1], pos[2]);
+    g.add(plate(shape, name)); root.add(g);
+    P[name] = { g, sign };
+  }
+  const fl = rect(0, 0, L, FL); SM.forEach(x => fl.holes.push(circ(x, FL - 8, 2.25)));
+  pivot('aile', [0, W, 0], 1, fl);
+  const lp = rect(0, -LIP, L, 0); SM.forEach(x => lp.holes.push(circ(x, -LIP + 6, 2.25)));
+  pivot('retour', [0, 0, 0], -1, lp);
+
+  const STEPS = [
+    { part: null, title: 'Flan découpé laser', text: 'Développé à plat avec les 8 Ø4,5 et les 5 gros trous. Les 2 plis sont BAS 45° : même face vers le haut.',
+      gauge: '—', after: ['Flan 1350 × 112,07', 'Diagonales égales', '8 × Ø4,5 et 5 gros trous présents'] },
+    { part: 'retour', title: 'Pli 1 · retour BAS 45°', text: 'Pièce à plat, bord du retour contre la butée. Pli à 45° seulement : contrôler l\'angle sur la première pièce.',
+      gauge: '12,26 (bord du retour)', after: ['Angle 45° (135° entre âme et retour)', 'Partie droite du retour 11,38', 'Largeur hors-tout ≈ 109 (indicatif)', 'Angle régulier sur 1350'] },
+    { part: 'aile', title: 'Pli 2 · aile BAS 45°', text: 'Tourner la pièce, bord de l\'aile contre la butée. Après ce pli l\'aile et le retour sont à 90° l\'un de l\'autre.',
+      gauge: '17,26 (bord de l\'aile)', after: ['Hors-tout 76,50 × 71,50', 'Aile 16,38 droite, retour 11,38 droit', 'Aile ⟂ retour', 'Rectitude et vrillage sur 1350'] }
+  ];
+  const ORDER = STEPS.slice(1).map(s => s.part);
+  const angle = {}; ORDER.forEach(k => angle[k] = 0);
+  let step = 0, anim = null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function targetsFor(k) { const t = {}; ORDER.forEach((p, i) => t[p] = i < k ? 1 : 0); return t; }
+  function applyAngles() {
+    ORDER.forEach(k => { P[k].g.rotation.x = P[k].sign * D45 * angle[k]; });
+    outer.rotation.x = D45 * angle.aile;
+  }
+  function highlight() {
+    const active = STEPS[step].part;
+    const accent = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1f5fd1');
+    Object.keys(meshes).forEach(k => meshes[k].material.color.set(k === active ? accent : new THREE.Color(steel)));
+  }
+  function go(k) {
+    step = Math.max(0, Math.min(STEPS.length - 1, k));
+    const from = Object.assign({}, angle), to = targetsFor(step);
+    const t0 = performance.now(), dur = reduce ? 0 : 900;
+    anim = (now) => {
+      const u = dur ? Math.min(1, (now - t0) / dur) : 1;
+      const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      ORDER.forEach(p => angle[p] = from[p] + (to[p] - from[p]) * e);
+      applyAngles();
+      if (u >= 1) anim = null;
+    };
+    updateUI();
+  }
+  const $ = id => document.getElementById(id);
+  const dots = $('dots');
+  for (let i = 1; i < STEPS.length; i++) dots.appendChild(document.createElement('span'));
+  function updateUI() {
+    $('stepNo').textContent = 'ÉTAPE ' + step + ' / ' + (STEPS.length - 1);
+    $('stepTitle').textContent = STEPS[step].title;
+    $('stepText').textContent = STEPS[step].text;
+    $('stepGauge').textContent = STEPS[step].gauge;
+    const ul = $('stepAfter'); ul.textContent = '';
+    STEPS[step].after.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    $('bPrev').disabled = step === 0;
+    $('bNext').disabled = step === STEPS.length - 1;
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i < step));
+    highlight();
+  }
+  $('bNext').onclick = () => go(step + 1);
+  $('bPrev').onclick = () => go(step - 1);
+  $('bFlat').onclick = () => go(0);
+  $('bDone').onclick = () => go(STEPS.length - 1);
+  function view(name) {
+    const pos = { iso: [760, 480, 900], face: [0, 0, 1850], prof: [960, 0, 0] }[name];
+    camera.position.set(pos[0], pos[1], pos[2]);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }
+  $('v-iso').onclick = () => view('iso');
+  $('v-face').onclick = () => view('face');
+  $('v-prof').onclick = () => { if (step < STEPS.length - 1) go(STEPS.length - 1); view('prof'); };
+  function applyTheme() {
+    const edge = getComputedStyle(document.documentElement).getPropertyValue('--edge').trim();
+    if (edge) lineMat.color.set(edge);
+    highlight();
+  }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  function loop(now) { if (anim) anim(now); controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); }
+  view('iso');
+  go(STEPS.length - 1);
+  applyTheme();
+  requestAnimationFrame(loop);
+})();
+</script>
