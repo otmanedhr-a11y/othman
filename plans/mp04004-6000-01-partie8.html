@@ -1,4 +1,4 @@
-<title>Profil MP04004-6000-01 P8</title>
+<title>Profile MP04004-6000-01 P8</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -120,16 +120,16 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Plan MP04004-6000-01-partie8 · Robot de PAL L1 et L2 · E24 ép. 3 · peinture · qté 4</div>
-    <h1>Profil C à retour avec crans</h1>
+    <div class="eyebrow">Drawing MP04004-6000-01-partie8 · Robot de PAL L1 et L2 · E24 t = 3 · painted · qty 4</div>
+    <h1>Lipped C-profile with notches</h1>
     <div class="specs">
-      <span class="chip">Longueur <b>894</b></span>
-      <span class="chip">Hauteur <b>80</b></span>
-      <span class="chip">Aile basse <b>50</b></span>
-      <span class="chip">Aile haute <b>30</b></span>
-      <span class="chip">Retour <b>20</b></span>
-      <span class="chip">Plis <b>3 × UP 90° R5</b></span>
-      <span class="chip est">Développé <b>894 × 162,63</b> (plan : 152,63)</span>
+      <span class="chip">Length <b>894</b></span>
+      <span class="chip">Height <b>80</b></span>
+      <span class="chip">Bottom flange <b>50</b></span>
+      <span class="chip">Top flange <b>30</b></span>
+      <span class="chip">Return <b>20</b></span>
+      <span class="chip">Bends <b>3 × UP 90° R5</b></span>
+      <span class="chip est">Flat blank <b>894 × 162,63</b> (drawing: 152,63)</span>
     </div>
   </header>
 
@@ -137,100 +137,100 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
     <div id="stage">
       <div class="views">
         <button type="button" id="v-iso">Iso</button>
-        <button type="button" id="v-face">Face</button>
-        <button type="button" id="v-prof">Profil</button>
+        <button type="button" id="v-face">Front</button>
+        <button type="button" id="v-prof">Profile</button>
       </div>
-      <div class="hint">Glisser pour tourner · molette / pincer pour zoomer</div>
+      <div class="hint">Drag to rotate · scroll / pinch to zoom</div>
     </div>
     <div class="stepper">
       <div class="step-head">
-        <span class="step-no" id="stepNo">ÉTAPE 0 / 3</span>
+        <span class="step-no" id="stepNo">STEP 0 / 3</span>
         <span class="step-title" id="stepTitle"></span>
       </div>
       <p class="step-text" id="stepText"></p>
       <div class="checks">
-        <div class="gauge"><span>Butée</span><b id="stepGauge"></b></div>
-        <div class="after"><span>Cotes à mesurer après ce pli</span><ul id="stepAfter"></ul></div>
+        <div class="gauge"><span>Back gauge</span><b id="stepGauge"></b></div>
+        <div class="after"><span>Check after this bend</span><ul id="stepAfter"></ul></div>
       </div>
       <div class="controls">
-        <button type="button" id="bFlat">Plat</button>
-        <button type="button" id="bPrev">◀ Précédent</button>
-        <button type="button" id="bNext" class="primary">Pli suivant ▶</button>
-        <button type="button" id="bDone">Pièce finie</button>
+        <button type="button" id="bFlat">Flat</button>
+        <button type="button" id="bPrev">◀ Previous</button>
+        <button type="button" id="bNext" class="primary">Next bend ▶</button>
+        <button type="button" id="bDone">Finished part</button>
         <div class="dots" id="dots" aria-hidden="true"></div>
       </div>
     </div>
   </div>
 
   <div class="note">
-    <h3>Cote à vérifier avant de couper</h3>
+    <h3>Dimension to check before cutting</h3>
     <ul>
-      <li>Le plan écrit 152,63 pour la largeur du développé. Les autres cotes donnent 162,63 : 17,11 + 24,21 + 74,21 + 47,11. C'est cohérent avec la hauteur 80 de la coupe et de la vue de face, et le dessin mesuré à l'échelle fait aussi ≈ 162.</li>
-      <li>Avec 152,63, l'âme ne fait que 70 au lieu de 80. Couper depuis le DXF du bureau d'études, ou leur faire confirmer. Cette page est calculée avec 162,63 (âme 80).</li>
+      <li>The drawing says 152,63 for the flat blank width. The other dimensions add up to 162,63: 17,11 + 24,21 + 74,21 + 47,11. That matches the 80 height in the section and front view, and the drawing scaled also gives ≈ 162.</li>
+      <li>With 152,63 the web is only 70 instead of 80. Cut from the design office DXF, or get them to confirm. This page uses 162,63 (web 80).</li>
     </ul>
   </div>
 
   <section class="card">
-    <h2>Avant et après pliage</h2>
+    <h2>Before and after bending</h2>
     <div class="dia wide">
-      <h3>Avant pliage · développé 894 × 162,63</h3>
-      <div class="svgwrap"><svg viewBox="0 0 820 330" role="img" aria-label="Développé avec lignes de pli">
+      <h3>Before bending · flat blank 894 × 162,63</h3>
+      <div class="svgwrap"><svg viewBox="0 0 820 330" role="img" aria-label="Flat blank with bend lines">
 <path class="o" d="M60 60H173V187H238V60H462V187H527V60H640V270H350A14 14 0 0 0 322 270H60Z"/>
 <path class="b" d="M60 85H173M238 85H462M527 85H640M60 120H173M238 120H462M527 120H640M60 215H640"/>
 <text class="s" x="350" y="81" text-anchor="middle">UP 90° R5</text><text class="s" x="350" y="116" text-anchor="middle">UP 90° R5</text><text class="s" x="350" y="211" text-anchor="middle">UP 90° R5</text>
 <g class="nb"><circle cx="600" cy="85" r="9"/><text x="600" y="85">1</text></g><g class="nb"><circle cx="600" cy="120" r="9"/><text x="600" y="120">2</text></g><g class="nb"><circle cx="600" cy="215" r="9"/><text x="600" y="215">3</text></g>
 <text x="52" y="64" text-anchor="end">0</text><text x="52" y="89" text-anchor="end">17,11</text><text x="52" y="124" text-anchor="end">41,32</text><text x="52" y="219" text-anchor="end">115,52</text><text x="52" y="274" text-anchor="end">162,63</text>
-<text x="652" y="77">17,11</text><text class="m" x="700" y="77">retour</text>
-<text x="652" y="106">24,21</text><text class="m" x="700" y="106">aile haute</text>
-<text x="652" y="171">74,21</text><text class="m" x="700" y="171">âme</text>
-<text x="652" y="246">47,11</text><text class="m" x="700" y="246">aile basse</text>
-<text class="m" x="205" y="52" text-anchor="middle">cran ≈ 100</text><text class="m" x="494" y="52" text-anchor="middle">cran ≈ 100</text>
-<text class="m" x="336" y="288" text-anchor="middle">½ rond R ≈ 20</text>
+<text x="652" y="77">17,11</text><text class="m" x="700" y="77">return</text>
+<text x="652" y="106">24,21</text><text class="m" x="700" y="106">top flange</text>
+<text x="652" y="171">74,21</text><text class="m" x="700" y="171">web</text>
+<text x="652" y="246">47,11</text><text class="m" x="700" y="246">bottom flange</text>
+<text class="m" x="205" y="52" text-anchor="middle">notch ≈ 100</text><text class="m" x="494" y="52" text-anchor="middle">notch ≈ 100</text>
+<text class="m" x="336" y="288" text-anchor="middle">half-round R ≈ 20</text>
 <path class="d" d="M60 310H640M60 305v10M640 305v10"/><text x="350.0" y="304" text-anchor="middle">894</text>
 </svg></div>
-      <p class="cap">Traits rouges = lignes de pli (tous UP 90° R5), numéro = ordre de pliage. À gauche : distance depuis le bord du retour. À droite : largeur de chaque bande. Schéma pas à l'échelle.</p>
+      <p class="cap">Red dashed lines = bend lines (all UP 90° R5), number = bend order. Left: distance from the return edge. Right: width of each strip. Not to scale.</p>
     </div>
     <div class="dia-grid">
       <div class="dia">
-        <h3>Après pliage · coupe</h3>
-        <div class="svgwrap"><svg viewBox="0 0 360 340" role="img" aria-label="Coupe après pliage">
+        <h3>After bending · section</h3>
+        <div class="svgwrap"><svg viewBox="0 0 360 340" role="img" aria-label="Section after bending">
 <line class="ghost" x1="100" y1="205" x2="140" y2="205"/>
 <polyline class="p" points="210,100 210,40 120,40 120,280 270,280"/>
 <g class="nb"><circle cx="210" cy="40" r="9"/><text x="210" y="40">1</text></g><g class="nb"><circle cx="120" cy="40" r="9"/><text x="120" y="40">2</text></g><g class="nb"><circle cx="120" cy="280" r="9"/><text x="120" y="280">3</text></g>
 <path class="d" d="M120 20H210M120 15v10M210 15v10"/><text x="165.0" y="14" text-anchor="middle">30</text><path class="d" d="M236 40V100M231 40h10M231 100h10"/><text x="246" y="74.0" text-anchor="start">20</text><path class="d" d="M80 40V280M75 40h10M75 280h10"/><text x="72" y="164.0" text-anchor="end">80</text><path class="d" d="M120 308H270M120 303v10M270 303v10"/><text x="195.0" y="326" text-anchor="middle">50</text>
-<path class="d" d="M210 104V273"/><text class="m" x="218" y="192">jour ≈ 57</text>
-<text class="m" x="146" y="209">25 (crans)</text>
+<path class="d" d="M210 104V273"/><text class="m" x="218" y="192">gap ≈ 57</text>
+<text class="m" x="146" y="209">25 (notches)</text>
 </svg></div>
-        <p class="cap">Bande 17,11 → retour 20 ; 24,21 → aile haute 30 ; 74,21 → âme 80 ; 47,11 → aile basse 50.</p>
+        <p class="cap">Strip 17,11 → return 20; 24,21 → top flange 30; 74,21 → web 80; 47,11 → bottom flange 50.</p>
       </div>
       <div class="dia">
-        <h3>Après pliage · vue de face</h3>
-        <div class="svgwrap"><svg class="lg" viewBox="-40 0 790 190" role="img" aria-label="Vue de face après pliage">
+        <h3>After bending · front view</h3>
+        <div class="svgwrap"><svg class="lg" viewBox="-40 0 790 190" role="img" aria-label="Front view after bending">
 <path class="o" d="M40 50H161V105H230V50H470V105H539V50H660V130H40Z"/>
 <path class="d" d="M40 166H660M40 161v10M660 161v10"/><text x="350.0" y="160" text-anchor="middle">894</text><path class="d" d="M22 50V130M17 50h10M17 130h10"/><text x="16" y="94.0" text-anchor="end">80</text><path class="d" d="M680 105V130M675 105h10M675 130h10"/><text x="688" y="121.5" text-anchor="start">25</text>
 <text class="m" x="195" y="40" text-anchor="middle">≈ 100</text><text class="m" x="505" y="40" text-anchor="middle">≈ 100</text>
 <text class="m" x="100" y="40" text-anchor="middle">≈ 174</text><text class="m" x="600" y="40" text-anchor="middle">≈ 174</text>
 </svg></div>
-        <p class="cap">Les crans enlèvent le retour, l'aile haute et l'âme jusqu'à 25 du bas. Positions des crans lues à l'échelle.</p>
+        <p class="cap">The notches remove the return, top flange and web down to 25 from the bottom. Notch positions scaled.</p>
       </div>
     </div>
   </section>
 
   <section class="card">
-    <h2>Gamme de fabrication</h2>
+    <h2>Process steps</h2>
     <ol class="ops">
-      <li><div><h3>Découpe laser du développé</h3><p>Tôle E24 (S235) ép. 3. Flan 894 × 162,63 (à confirmer, voir plus haut) avec les 2 crans ≈ 100 de large et ≈ 93 de profondeur depuis le bord du retour, angles arrondis, et le demi-rond R ≈ 20 sur le bord de l'aile basse. 4 pièces.</p></div></li>
-      <li><div><h3>Ébavurage</h3><p>Casser les angles vifs (demandé au cartouche), surtout dans les crans et le demi-rond.</p></div></li>
-      <li><div><h3>Pliage presse plieuse : 3 plis, tous UP 90°</h3><p>Ordre : retour 20 → aile haute 30 → aile basse 50. La pièce garde la même face vers le haut. Matrice V24 : R5 demanderait un V30, mais le retour de 20 est trop court pour un V30 (aile mini ≈ 21).</p></div></li>
-      <li><div><h3>Contrôle puis peinture</h3><p>80 / 50 / 30 / 20, 25 sous les crans, équerrage et rectitude sur 894. Peinture après contrôle.</p></div></li>
+      <li><div><h3>Laser cutting of the flat blank</h3><p>E24 (S235) sheet, t = 3. Blank 894 × 162,63 (to confirm, see above) with the 2 notches ≈ 100 wide and ≈ 93 deep from the return edge, rounded corners, and the half-round R ≈ 20 on the bottom flange edge. 4 parts.</p></div></li>
+      <li><div><h3>Deburring</h3><p>Break sharp edges (required in the title block), mainly in the notches and the half-round.</p></div></li>
+      <li><div><h3>Press brake: 3 bends, all UP 90°</h3><p>Order: return 20 → top flange 30 → bottom flange 50. The part keeps the same face up. V24 die: R5 would need a V30, but the 20 return is too short for a V30 (minimum flange ≈ 21).</p></div></li>
+      <li><div><h3>Inspection, then painting</h3><p>80 / 50 / 30 / 20, 25 under the notches, squareness and straightness over 894. Paint after inspection.</p></div></li>
     </ol>
     <div class="tablewrap">
       <table>
-        <thead><tr><th>Ordre</th><th>Pli</th><th>Longueur pliée</th><th>Position pièce</th><th>Butée</th><th>Outillage</th><th>Cotes à mesurer après le pli</th></tr></thead>
+        <thead><tr><th>Order</th><th>Bend</th><th>Bend length</th><th>Part position</th><th>Back gauge</th><th>Tooling</th><th>Check after the bend</th></tr></thead>
         <tbody>
-          <tr><td class="num">1</td><td>Retour</td><td class="num">894 (3 tronçons)</td><td>À plat, bord du retour contre la butée</td><td class="num">17,11<br>bord du retour</td><td>Poinçon droit, V24</td><td>Retour 20 ext. · 90° · largeur à plat 148,41</td></tr>
-          <tr><td class="num">2</td><td>Aile haute</td><td class="num">894 (3 tronçons)</td><td>Même face en haut, retour debout contre la butée</td><td class="num">27,10<br>sur l'ext. du retour</td><td>Poinçon droit, V24</td><td>Aile haute 30 · retour 20 · largeur à plat 124,20</td></tr>
-          <tr><td class="num">3</td><td>Aile basse</td><td class="num">894</td><td>Bord de l'aile basse contre la butée, doigts loin du demi-rond</td><td class="num">47,11<br>bord aile basse</td><td>Col de cygne, V24</td><td>Hauteur 80 · aile basse 50 · aile haute 30 · retour 20 · jour ≈ 57</td></tr>
+          <tr><td class="num">1</td><td>Return</td><td class="num">894 (3 sections)</td><td>Flat, return edge against the back gauge</td><td class="num">17,11<br>return edge</td><td>Straight punch, V24</td><td>Return 20 outside · 90° · remaining flat width 148,41</td></tr>
+          <tr><td class="num">2</td><td>Top flange</td><td class="num">894 (3 sections)</td><td>Same face up, return standing against the back gauge</td><td class="num">27,10<br>on the return outer face</td><td>Straight punch, V24</td><td>Top flange 30 · return 20 · remaining flat width 124,20</td></tr>
+          <tr><td class="num">3</td><td>Bottom flange</td><td class="num">894</td><td>Bottom flange edge against the back gauge, fingers away from the half-round</td><td class="num">47,11<br>bottom flange edge</td><td>Gooseneck, V24</td><td>Height 80 · bottom flange 50 · top flange 30 · return 20 · gap ≈ 57</td></tr>
         </tbody>
       </table>
     </div>
@@ -238,23 +238,23 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
 
   <div class="grid2">
     <section class="card">
-      <h2>Lecture du plan</h2>
+      <h2>Drawing check</h2>
       <dl>
-        <dt>Retour (développé)</dt><dd>17,11 → 20 fini</dd>
-        <dt>Aile haute (développé)</dt><dd>24,21 → 30 fini</dd>
-        <dt>Âme (développé)</dt><dd>74,21 → 80 fini</dd>
-        <dt>Aile basse (développé)</dt><dd>47,11 → 50 fini</dd>
-        <dt>Déduction par pli</dt><dd>5,78 (ép. 3, R5, K = 0,5)</dd>
-        <dt>Masse unitaire</dt><dd>≈ 3,0 kg (×4 ≈ 12 kg)</dd>
+        <dt>Return (flat)</dt><dd>17,11 → 20 finished</dd>
+        <dt>Top flange (flat)</dt><dd>24,21 → 30 finished</dd>
+        <dt>Web (flat)</dt><dd>74,21 → 80 finished</dd>
+        <dt>Bottom flange (flat)</dt><dd>47,11 → 50 finished</dd>
+        <dt>Bend deduction</dt><dd>5,78 (t = 3, R5, K = 0,5)</dd>
+        <dt>Unit weight</dt><dd>≈ 3,0 kg (×4 ≈ 12 kg)</dd>
       </dl>
     </section>
     <div class="note">
-      <h3>Autres points à confirmer</h3>
+      <h3>Other points to confirm</h3>
       <ul>
-        <li>Crans non cotés sur la photo : ≈ 100 de large, à ≈ 174 de chaque bout (lu à l'échelle).</li>
-        <li>Demi-rond sur l'aile basse : R ≈ 20, centre à ≈ 425 du bout gauche (pas tout à fait au milieu). Lu à l'échelle.</li>
-        <li>Avec un V24 le rayon intérieur sera ≈ 4 au lieu de 5, donc la déduction réelle sera un peu plus petite. Faire une pièce d'essai et ajuster la butée.</li>
-        <li>Le modèle 3D est à angles vifs.</li>
+        <li>Notches not dimensioned on the photo: ≈ 100 wide, ≈ 174 from each end (scaled).</li>
+        <li>Half-round on the bottom flange: R ≈ 20, centre ≈ 425 from the left end (not quite in the middle). Scaled.</li>
+        <li>With a V24 the inside radius will be ≈ 4 instead of 5, so the real deduction will be a bit smaller. Make a test part and adjust the back gauge.</li>
+        <li>The 3D model uses sharp corners.</li>
       </ul>
     </div>
   </div>
@@ -321,14 +321,14 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
   pivot('lip', top, [0, FT, 0], 'x', 1, strips(0, LIP));
 
   const STEPS = [
-    { part: null, title: 'Flan découpé laser', text: 'Développé à plat avec les 2 crans et le demi-rond. Les 3 plis sont UP : même face vers le haut du début à la fin.',
-      gauge: '—', after: ['Flan 894 × 162,63 (plan : 152,63, à confirmer)', 'Crans ≈ 100 de large, ≈ 93 de profondeur', 'Demi-rond R ≈ 20 sur le bord de l\'aile basse'] },
-    { part: 'lip', title: 'Pli 1 · retour 20', text: 'Pièce à plat, bord du retour contre la butée. Mettre les doigts de butée sur les parties pleines, pas dans les crans.',
-      gauge: '17,11 (bord du retour)', after: ['Retour 20 ext.', 'Angle 90° sur les 3 tronçons', 'Largeur à plat 148,41 (bord aile basse → ext. retour)'] },
-    { part: 'topFl', title: 'Pli 2 · aile haute 30', text: 'Même face en haut. Le retour de 20 est debout, sa face extérieure contre la butée.',
-      gauge: '27,10 (ext. du retour)', after: ['Aile haute 30 ext.', 'Retour 20', 'Angle 90°', 'Largeur à plat 124,20 (bord aile basse → ext. aile haute)'] },
-    { part: 'botFl', title: 'Pli 3 · aile basse 50', text: 'Dernier pli, la pièce se ferme en C. Bord de l\'aile basse contre la butée, doigts loin du demi-rond. Col de cygne : l\'aile haute revient au-dessus du poinçon.',
-      gauge: '47,11 (bord aile basse)', after: ['Hauteur 80', 'Aile basse 50, aile haute 30, retour 20', '25 sous les crans', 'Jour retour / aile basse ≈ 57', 'Rectitude sur 894'] }
+    { part: null, title: 'Laser-cut blank', text: 'Flat blank with the 2 notches and the half-round. All 3 bends are UP: same face up from start to finish.',
+      gauge: '—', after: ['Blank 894 × 162,63 (drawing: 152,63, to confirm)', 'Notches ≈ 100 wide, ≈ 93 deep', 'Half-round R ≈ 20 on the bottom flange edge'] },
+    { part: 'lip', title: 'Bend 1 · return 20', text: 'Part flat, return edge against the back gauge. Put the gauge fingers on solid material, not in the notches.',
+      gauge: '17,11 (return edge)', after: ['Return 20 outside', 'Angle 90° on all 3 sections', 'Remaining flat width 148,41 (bottom flange edge → return outside)'] },
+    { part: 'topFl', title: 'Bend 2 · top flange 30', text: 'Same face up. The 20 return stands up, its outer face against the back gauge.',
+      gauge: '27,10 (return outer face)', after: ['Top flange 30 outside', 'Return 20', 'Angle 90°', 'Remaining flat width 124,20 (bottom flange edge → top flange outside)'] },
+    { part: 'botFl', title: 'Bend 3 · bottom flange 50', text: 'Last bend, the part closes into a C. Bottom flange edge against the back gauge, fingers away from the half-round. Gooseneck: the top flange comes back over the punch.',
+      gauge: '47,11 (bottom flange edge)', after: ['Height 80', 'Bottom flange 50, top flange 30, return 20', '25 under the notches', 'Gap return / bottom flange ≈ 57', 'Straightness over 894'] }
   ];
   const ORDER = STEPS.slice(1).map(s => s.part);
   const angle = {}; ORDER.forEach(k => angle[k] = 0);
@@ -358,7 +358,7 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
   const dots = $('dots');
   for (let i = 1; i < STEPS.length; i++) dots.appendChild(document.createElement('span'));
   function updateUI() {
-    $('stepNo').textContent = 'ÉTAPE ' + step + ' / ' + (STEPS.length - 1);
+    $('stepNo').textContent = 'STEP ' + step + ' / ' + (STEPS.length - 1);
     $('stepTitle').textContent = STEPS[step].title;
     $('stepText').textContent = STEPS[step].text;
     $('stepGauge').textContent = STEPS[step].gauge;

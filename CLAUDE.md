@@ -37,5 +37,8 @@ Sens de pli : toujours en anglais, **UP** / **DOWN**, dans les pages et dans
 les réponses, même si le plan écrit BAS / HAUT (BAS → DOWN, HAUT → UP).
 Signaler une fois que le plan utilise BAS / HAUT.
 
-Langue : répondre en darija (comme l'utilisateur) ; termes techniques et pages
-de fabrication en français, comme sur les plans.
+Langue : répondre en darija (comme l'utilisateur), mais tous les termes
+techniques en anglais (flange, return, web, tab, end plate, base, notch,
+back gauge, bend, flat blank, punch, gooseneck, die…). Les pages de
+fabrication sont entièrement en anglais. Garder les virgules décimales des
+plans (32,53).
