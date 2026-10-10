@@ -1,0 +1,360 @@
+<title>U-channel 42 × 45</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: atelier sheet — 3D viewer with bend stepper on top, then the routing card (gamme) as a table, assumptions last. */
+:root {
+  --bg: #eef0f2;
+  --panel: #ffffff;
+  --ink: #1b2129;
+  --muted: #5d6773;
+  --line: #d3d8de;
+  --accent: #1f5fd1;      /* layout-fluid blue */
+  --accent-soft: #e3ecfb;
+  --warn: #9a5b00;
+  --warn-soft: #fff3df;
+  --viewer: #e4e8ec;
+  --edge: #2a3038;
+  --bend: #d0502a;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+    --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+    --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+  --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+  --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 600; font-size: 24px; margin: 0; letter-spacing: .01em; }
+.specs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { font-family: var(--f-mono); font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); font-variant-numeric: tabular-nums; }
+.chip b { font-weight: 500; color: var(--accent); }
+.chip.est { border-style: dashed; }
+
+.viewer { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: grid; }
+#stage { position: relative; height: clamp(320px, 56vh, 560px); background: var(--viewer); touch-action: none; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+.views { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; }
+.views button { font-family: var(--f-mono); font-size: 12px; padding: 4px 9px; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: var(--muted); }
+.stepper { display: grid; gap: 12px; padding: 14px 16px 16px; border-top: 1px solid var(--line); }
+.step-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.step-no { font-family: var(--f-mono); font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.step-title { font-family: var(--f-display); font-size: 22px; font-weight: 600; }
+.step-text { margin: 0; color: var(--muted); max-width: 70ch; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: inherit; font-size: 14px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 600; }
+button:disabled { opacity: .45; cursor: default; }
+.checks { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 10px 20px; padding: 12px 14px; background: var(--accent-soft); border-radius: 4px; }
+.checks span { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.checks b { font-family: var(--f-mono); font-weight: 500; font-size: 15px; font-variant-numeric: tabular-nums; }
+.checks ul { margin: 2px 0 0; padding-left: 18px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.checks .after { min-width: 0; }
+@media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
+
+.dia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.dia { display: grid; gap: 6px; min-width: 0; }
+.dia h3 { margin: 0; font-size: 14px; font-family: var(--f-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dia .svgwrap { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.dia svg { display: block; width: 100%; min-width: 300px; height: auto; }
+.dia.wide svg { min-width: 560px; }
+.dia .cap { margin: 0; font-size: 13px; color: var(--muted); }
+svg .o { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.5; }
+svg .p { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: miter; }
+svg .ft { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.2; }
+svg .ghost { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+svg .b { stroke: var(--bend); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+svg .d { stroke: var(--muted); stroke-width: 1; fill: none; }
+svg .hole { fill: var(--bg); stroke: var(--ink); stroke-width: 1; }
+svg text { font-family: var(--f-mono); font-size: 12px; fill: var(--ink); }
+svg text.m { fill: var(--muted); font-size: 11px; }
+svg text.s { fill: var(--bend); font-size: 10px; }
+svg.lg text { font-size: 17px; }
+svg.lg text.m { font-size: 15px; }
+svg text.big { font-size: 14px; font-weight: 500; }
+svg .nb circle { fill: var(--bend); }
+svg .nb text { fill: #fff; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
+.dots { display: flex; gap: 4px; margin-left: auto; }
+.dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
+.dots span.on { background: var(--accent); }
+
+section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px 16px; display: grid; gap: 14px; min-width: 0; }
+ol.ops { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: op; }
+ol.ops li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; min-width: 0; }
+ol.ops li::before { counter-increment: op; content: "OP " counter(op, decimal-leading-zero); font-family: var(--f-mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+ol.ops h3 { margin: 0; font-size: 16px; font-weight: 600; }
+ol.ops p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dir { font-family: var(--f-mono); font-size: 12px; padding: 1px 7px; border-radius: 3px; white-space: nowrap; }
+.dir.up { background: var(--accent-soft); color: var(--accent); }
+.dir.down { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.note { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 12px 14px; border-radius: 4px; display: grid; gap: 6px; }
+.note h3 { margin: 0; font-size: 14px; color: var(--warn); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+.note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+
+
+
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Hand sketch · t = 3 mm · length 40 · read as a U-channel</div>
+    <h1>U-channel 42 × 45 × 40</h1>
+    <div class="specs">
+      <span class="chip">Base <b>42</b></span>
+      <span class="chip">Legs <b>45 / 45</b></span>
+      <span class="chip">Length <b>40</b></span>
+      <span class="chip">Thickness <b>3</b></span>
+      <span class="chip">Bends <b>2 × UP 90°</b></span>
+      <span class="chip est">Flat blank <b>122,13 × 40</b> (calculated)</span>
+    </div>
+  </header>
+
+  <div class="viewer">
+    <div id="stage">
+      <div class="views">
+        <button type="button" id="v-iso">Iso</button>
+        <button type="button" id="v-face">Front</button>
+        <button type="button" id="v-prof">Profile</button>
+      </div>
+      <div class="hint">Drag to rotate · scroll / pinch to zoom</div>
+    </div>
+    <div class="stepper">
+      <div class="step-head">
+        <span class="step-no" id="stepNo">STEP 0 / 2</span>
+        <span class="step-title" id="stepTitle"></span>
+      </div>
+      <p class="step-text" id="stepText"></p>
+      <div class="checks">
+        <div class="gauge"><span>Back gauge</span><b id="stepGauge"></b></div>
+        <div class="after"><span>Check after this bend</span><ul id="stepAfter"></ul></div>
+      </div>
+      <div class="controls">
+        <button type="button" id="bFlat">Flat</button>
+        <button type="button" id="bPrev">◀ Previous</button>
+        <button type="button" id="bNext" class="primary">Next bend ▶</button>
+        <button type="button" id="bDone">Finished part</button>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>Before and after bending</h2>
+    <div class="dia wide">
+      <h3>Before bending · flat blank 122,13 × 40</h3>
+      <div class="svgwrap"><svg viewBox="0 0 700 300" role="img" aria-label="Flat blank with bend lines">
+<rect class="o" x="80" y="70" width="488.5" height="160"/>
+<path class="b" d="M250.1 70V230M398.4 70V230"/>
+<g class="nb"><circle cx="250.1" cy="92" r="9"/><text x="250.1" y="92">1</text></g><g class="nb"><circle cx="398.4" cy="92" r="9"/><text x="398.4" y="92">2</text></g>
+<text class="s" x="256.1" y="222">UP 90°</text><text class="s" x="404.4" y="222">UP 90°</text>
+<text x="80" y="56" text-anchor="middle">0</text><text x="250.1" y="56" text-anchor="middle">42,53</text><text x="398.4" y="56" text-anchor="middle">79,60</text><text x="568.5" y="56" text-anchor="middle">122,13</text>
+<text x="165.1" y="254" text-anchor="middle">42,53</text><text x="324.3" y="254" text-anchor="middle">37,07</text><text x="483.5" y="254" text-anchor="middle">42,53</text>
+<text class="m" x="165.1" y="270" text-anchor="middle">leg</text><text class="m" x="324.3" y="270" text-anchor="middle">base</text><text class="m" x="483.5" y="270" text-anchor="middle">leg</text>
+<path class="d" d="M600 70V230M595 70h10M595 230h10"/><text x="610" y="154.0" text-anchor="start">40</text>
+</svg></div>
+      <p class="cap">Red dashed lines = bend lines, number = bend order. Top: distance from the left edge. Bottom: width of each strip. Not to scale.</p>
+    </div>
+    <div class="dia-grid">
+      <div class="dia">
+        <h3>After bending · section (outside dimensions)</h3>
+        <div class="svgwrap"><svg viewBox="0 0 380 280" style="max-width:440px;margin:0 auto" role="img" aria-label="Section after bending">
+<polyline class="p" points="100,40 100,220 268,220 268,40"/>
+<g class="nb"><circle cx="100" cy="220" r="9"/><text x="100" y="220">1</text></g><g class="nb"><circle cx="268" cy="220" r="9"/><text x="268" y="220">2</text></g>
+<path class="d" d="M70 40V220M65 40h10M65 220h10"/><text x="62" y="134.0" text-anchor="end">45</text><path class="d" d="M298 40V220M293 40h10M293 220h10"/><text x="308" y="134.0" text-anchor="start">45</text><path class="d" d="M100 250H268M100 245v10M268 245v10"/><text x="184.0" y="268" text-anchor="middle">42</text>
+<path class="d" d="M104 130H264"/><text class="m" x="184" y="124" text-anchor="middle">inside 36</text>
+<text class="m" x="184" y="200" text-anchor="middle">t = 3 · length 40</text>
+</svg></div>
+        <p class="cap">Strip 42,53 → leg 45; 37,07 → base 42; 42,53 → leg 45. Both legs on the same side.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Process steps</h2>
+    <ol class="ops">
+      <li><div><h3>Cutting the blank</h3><p>122,13 × 40 in 3 mm sheet (laser or shear). Bends run along the 40 side.</p></div></li>
+      <li><div><h3>Deburring</h3><p>All 4 edges.</p></div></li>
+      <li><div><h3>Press brake: 2 bends UP 90°</h3><p>V24 die. The part is only 40 long: one gauge finger in the middle, short punch segment, and keep the hands clear (hold it with pliers or a magnet).</p></div></li>
+      <li><div><h3>Inspection</h3><p>45 / 42 / 45, inside 36, legs parallel and square to the base.</p></div></li>
+    </ol>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Order</th><th>Bend</th><th>Bend length</th><th>Part position</th><th>Back gauge</th><th>Tooling</th><th>Check after the bend</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Leg 1, UP 90°</td><td class="num">40</td><td>Flat, one 42,53 strip toward the gauge</td><td class="num">42,53<br>blank edge</td><td>Straight punch, V24</td><td>Leg 45 outside · 90° · remaining flat 82,07</td></tr>
+          <tr><td class="num">2</td><td>Leg 2, UP 90°</td><td class="num">40</td><td>Turn 180°, the other flat edge against the gauge; leg 1 stands up</td><td class="num">42,53<br>other blank edge</td><td>Straight punch, V24</td><td>45 / 42 / 45 · inside 36 · legs parallel</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Drawing check</h2>
+      <dl>
+        <dt>Legs (flat)</dt><dd>42,53 → 45 finished</dd>
+        <dt>Base (flat)</dt><dd>37,07 → 42 finished</dd>
+        <dt>Bend deduction</dt><dd>4,93 (t = 3, R3, K = 0,5)</dd>
+        <dt>Weight</dt><dd>≈ 0,12 kg (steel)</dd>
+      </dl>
+    </section>
+    <div class="note">
+      <h3>To confirm before production</h3>
+      <ul>
+        <li>Shape: read as a U-channel. The second leg height is not written; 45 assumed like the first. If it is an L (no second leg), the blank is 82,07.</li>
+        <li>45 / 42 taken as outside dimensions. If they are inside, the blank changes.</li>
+        <li>Bend deduction 4,93 is calculated (R3, K = 0,5). On V24 the real radius is ≈ 4, so your machine may give ≈ 5,3: use the controller value or a test part.</li>
+        <li>Material not written: steel assumed.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const LEN = 40, B = 37.07, LEG = 42.53, T = 3;
+  const R = d => d * Math.PI / 180;
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.prepend(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 1, 5000);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6a7284, 1.0));
+  const d1 = new THREE.DirectionalLight(0xffffff, 0.85); d1.position.set(300, 500, 600); scene.add(d1);
+  const d2 = new THREE.DirectionalLight(0xffffff, 0.35); d2.position.set(-500, -200, -400); scene.add(d2);
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x2a3038 });
+  const steel = 0xb9c0c8;
+  const meshes = {};
+  function plate(shape, name) {
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: T, bevelEnabled: false });
+    const mat = new THREE.MeshStandardMaterial({ color: steel, metalness: 0.55, roughness: 0.42, side: THREE.DoubleSide });
+    const m = new THREE.Mesh(geo, mat);
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), lineMat));
+    meshes[name] = m;
+    return m;
+  }
+  function rect(x0, y0, x1, y1) { const s = new THREE.Shape(); s.moveTo(x0,y0); s.lineTo(x1,y0); s.lineTo(x1,y1); s.lineTo(x0,y1); s.closePath(); return s; }
+  const outer = new THREE.Group(); outer.rotation.x = -Math.PI / 2; scene.add(outer);
+  const root = new THREE.Group(); root.position.set(-LEN / 2, -B / 2, -20); outer.add(root);
+  root.add(plate(rect(0, 0, LEN, B), 'base'));
+  const P = {};
+  function pivot(name, pos, ang, shape) {
+    const g = new THREE.Group(); g.position.set(pos[0], pos[1], pos[2]);
+    g.add(plate(shape, name)); root.add(g);
+    P[name] = { g, ang };
+  }
+  pivot('leg1', [0, 0, 0], R(-90), rect(0, -LEG, LEN, 0));
+  pivot('leg2', [0, B, 0], R(90), rect(0, 0, LEN, LEG));
+  const STEPS = [
+    { part: null, title: 'Cut blank', text: 'Blank 122,13 × 40, t = 3. Both bends go the same way (UP), so the part keeps the same face up.',
+      gauge: '—', after: ['Blank 122,13 × 40', 'Square corners'] },
+    { part: 'leg1', title: 'Bend 1 · leg 1 UP 90°', text: 'Part flat, one edge against the back gauge. Only 40 long: one gauge finger in the middle, short punch, hands clear.',
+      gauge: '42,53 (blank edge)', after: ['Leg 45 outside', 'Angle 90°', 'Remaining flat 82,07'] },
+    { part: 'leg2', title: 'Bend 2 · leg 2 UP 90°', text: 'Turn the part 180°, the other flat edge against the back gauge. Leg 1 stands up on the operator side, 36 away from the punch.',
+      gauge: '42,53 (other blank edge)', after: ['45 / 42 / 45 outside', 'Inside width 36', 'Legs parallel, square to the base'] }
+  ];
+  const ORDER = STEPS.slice(1).map(s => s.part);
+  const angle = {}; ORDER.forEach(k => angle[k] = 0);
+  let step = 0, anim = null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function targetsFor(k) { const t = {}; ORDER.forEach((p, i) => t[p] = i < k ? 1 : 0); return t; }
+  function applyAngles() { ORDER.forEach(k => { P[k].g.rotation.x = P[k].ang * angle[k]; }); }
+  function highlight() {
+    const active = STEPS[step].part;
+    const accent = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1f5fd1');
+    Object.keys(meshes).forEach(k => meshes[k].material.color.set(k === active ? accent : new THREE.Color(steel)));
+  }
+  function go(k) {
+    step = Math.max(0, Math.min(STEPS.length - 1, k));
+    const from = Object.assign({}, angle), to = targetsFor(step);
+    const t0 = performance.now(), dur = reduce ? 0 : 900;
+    anim = (now) => {
+      const u = dur ? Math.min(1, (now - t0) / dur) : 1;
+      const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      ORDER.forEach(p => angle[p] = from[p] + (to[p] - from[p]) * e);
+      applyAngles();
+      if (u >= 1) anim = null;
+    };
+    updateUI();
+  }
+  const $ = id => document.getElementById(id);
+  const dots = $('dots');
+  for (let i = 1; i < STEPS.length; i++) dots.appendChild(document.createElement('span'));
+  function updateUI() {
+    $('stepNo').textContent = 'STEP ' + step + ' / ' + (STEPS.length - 1);
+    $('stepTitle').textContent = STEPS[step].title;
+    $('stepText').textContent = STEPS[step].text;
+    $('stepGauge').textContent = STEPS[step].gauge;
+    const ul = $('stepAfter'); ul.textContent = '';
+    STEPS[step].after.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    $('bPrev').disabled = step === 0;
+    $('bNext').disabled = step === STEPS.length - 1;
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i < step));
+    highlight();
+  }
+  $('bNext').onclick = () => go(step + 1);
+  $('bPrev').onclick = () => go(step - 1);
+  $('bFlat').onclick = () => go(0);
+  $('bDone').onclick = () => go(STEPS.length - 1);
+  function view(name) {
+    const pos = { iso: [120, 110, 140], face: [0, 0, 230], prof: [230, 0, 1] }[name];
+    camera.position.set(pos[0], pos[1], pos[2]);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }
+  $('v-iso').onclick = () => view('iso');
+  $('v-face').onclick = () => view('face');
+  $('v-prof').onclick = () => { if (step < STEPS.length - 1) go(STEPS.length - 1); view('prof'); };
+  function applyTheme() {
+    const edge = getComputedStyle(document.documentElement).getPropertyValue('--edge').trim();
+    if (edge) lineMat.color.set(edge);
+    highlight();
+  }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  function loop(now) { if (anim) anim(now); controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); }
+  view('iso');
+  go(STEPS.length - 1);
+  applyTheme();
+  requestAnimationFrame(loop);
+})();
+</script>
