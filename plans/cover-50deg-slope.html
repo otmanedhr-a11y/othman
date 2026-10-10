@@ -1,0 +1,406 @@
+<title>Cover 50° slope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: atelier sheet — 3D viewer with bend stepper on top, then the routing card (gamme) as a table, assumptions last. */
+:root {
+  --bg: #eef0f2;
+  --panel: #ffffff;
+  --ink: #1b2129;
+  --muted: #5d6773;
+  --line: #d3d8de;
+  --accent: #1f5fd1;      /* layout-fluid blue */
+  --accent-soft: #e3ecfb;
+  --warn: #9a5b00;
+  --warn-soft: #fff3df;
+  --viewer: #e4e8ec;
+  --edge: #2a3038;
+  --bend: #d0502a;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+    --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+    --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+  --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+  --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 600; font-size: 24px; margin: 0; letter-spacing: .01em; }
+.specs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { font-family: var(--f-mono); font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); font-variant-numeric: tabular-nums; }
+.chip b { font-weight: 500; color: var(--accent); }
+.chip.est { border-style: dashed; }
+
+.viewer { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: grid; }
+#stage { position: relative; height: clamp(320px, 56vh, 560px); background: var(--viewer); touch-action: none; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+.views { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; }
+.views button { font-family: var(--f-mono); font-size: 12px; padding: 4px 9px; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: var(--muted); }
+.stepper { display: grid; gap: 12px; padding: 14px 16px 16px; border-top: 1px solid var(--line); }
+.step-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.step-no { font-family: var(--f-mono); font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.step-title { font-family: var(--f-display); font-size: 22px; font-weight: 600; }
+.step-text { margin: 0; color: var(--muted); max-width: 70ch; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: inherit; font-size: 14px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 600; }
+button:disabled { opacity: .45; cursor: default; }
+.checks { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 10px 20px; padding: 12px 14px; background: var(--accent-soft); border-radius: 4px; }
+.checks span { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.checks b { font-family: var(--f-mono); font-weight: 500; font-size: 15px; font-variant-numeric: tabular-nums; }
+.checks ul { margin: 2px 0 0; padding-left: 18px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.checks .after { min-width: 0; }
+@media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
+
+.dia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.dia { display: grid; gap: 6px; min-width: 0; }
+.dia h3 { margin: 0; font-size: 14px; font-family: var(--f-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dia .svgwrap { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.dia svg { display: block; width: 100%; min-width: 300px; height: auto; }
+.dia.wide svg { min-width: 560px; }
+.dia .cap { margin: 0; font-size: 13px; color: var(--muted); }
+svg .o { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.5; }
+svg .p { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: miter; }
+svg .ft { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.2; }
+svg .ghost { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+svg .b { stroke: var(--bend); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+svg .d { stroke: var(--muted); stroke-width: 1; fill: none; }
+svg .hole { fill: var(--bg); stroke: var(--ink); stroke-width: 1; }
+svg text { font-family: var(--f-mono); font-size: 12px; fill: var(--ink); }
+svg text.m { fill: var(--muted); font-size: 11px; }
+svg text.s { fill: var(--bend); font-size: 10px; }
+svg.lg text { font-size: 17px; }
+svg.lg text.m { font-size: 15px; }
+svg text.big { font-size: 14px; font-weight: 500; }
+svg .nb circle { fill: var(--bend); }
+svg .nb text { fill: #fff; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
+.dots { display: flex; gap: 4px; margin-left: auto; }
+.dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
+.dots span.on { background: var(--accent); }
+
+section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px 16px; display: grid; gap: 14px; min-width: 0; }
+ol.ops { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: op; }
+ol.ops li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; min-width: 0; }
+ol.ops li::before { counter-increment: op; content: "OP " counter(op, decimal-leading-zero); font-family: var(--f-mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+ol.ops h3 { margin: 0; font-size: 16px; font-weight: 600; }
+ol.ops p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dir { font-family: var(--f-mono); font-size: 12px; padding: 1px 7px; border-radius: 3px; white-space: nowrap; }
+.dir.up { background: var(--accent-soft); color: var(--accent); }
+.dir.down { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.note { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 12px 14px; border-radius: 4px; display: grid; gap: 6px; }
+.note h3 { margin: 0; font-size: 14px; color: var(--warn); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+.note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+
+
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Flat pattern drawing · part number not visible · bends R1 · drawing says HAUT / BAS (shown here as UP / DOWN)</div>
+    <h1>Cover with 50° slope</h1>
+    <div class="specs">
+      <span class="chip">Bends <b>6</b> (2 × UP, 4 × DOWN)</span>
+      <span class="chip">Slope <b>50°</b></span>
+      <span class="chip">Wall <b>19</b> + return <b>9</b></span>
+      <span class="chip">Slope <b>25</b> + return <b>10</b></span>
+      <span class="chip">Side tabs <b>19</b></span>
+      <span class="chip est">Thickness <b>1</b> (assumed)</span>
+      <span class="chip est">Base <b>≈ 124 × 40</b> (scaled)</span>
+    </div>
+  </header>
+
+  <div class="viewer">
+    <div id="stage">
+      <div class="views">
+        <button type="button" id="v-iso">Iso</button>
+        <button type="button" id="v-face">Front</button>
+        <button type="button" id="v-prof">Profile</button>
+      </div>
+      <div class="hint">Drag to rotate · scroll / pinch to zoom</div>
+    </div>
+    <div class="stepper">
+      <div class="step-head">
+        <span class="step-no" id="stepNo">STEP 0 / 6</span>
+        <span class="step-title" id="stepTitle"></span>
+      </div>
+      <p class="step-text" id="stepText"></p>
+      <div class="checks">
+        <div class="gauge"><span>Back gauge</span><b id="stepGauge"></b></div>
+        <div class="after"><span>Check after this bend</span><ul id="stepAfter"></ul></div>
+      </div>
+      <div class="controls">
+        <button type="button" id="bFlat">Flat</button>
+        <button type="button" id="bPrev">◀ Previous</button>
+        <button type="button" id="bNext" class="primary">Next bend ▶</button>
+        <button type="button" id="bDone">Finished part</button>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <h3>Missing from the photo</h3>
+    <ul>
+      <li>Overall size of the base, thickness, material, quantity and part number are not visible. Send a photo of the title block and the overall dimensions.</li>
+      <li>Only 10 / 35 / 28 / 9 / 19 are dimensioned. Base ≈ 124 × 40 is scaled from the photo. Finished sizes below assume t = 1 (R1 bends).</li>
+    </ul>
+  </div>
+
+  <section class="card">
+    <h2>Before and after bending</h2>
+    <div class="dia wide">
+      <h3>Before bending · flat blank</h3>
+      <div class="svgwrap"><svg viewBox="-60 0 820 350" role="img" aria-label="Flat blank with bend lines">
+<polygon class="o" points="160,40 470,40 470,127.5 517.5,87.5 517.5,227.5 470,227.5 470,297.5 160,297.5 160,227.5 112.5,227.5 112.5,87.5 160,127.5"/>
+<path class="b" d="M160 65H470M160 127.5H470M160 227.5H470M160 275H470M160 127.5V227.5M470 127.5V227.5"/>
+<text class="s" x="315" y="61" text-anchor="middle">UP 50° R1</text><text class="s" x="315" y="123.5" text-anchor="middle">DOWN 50° R1</text>
+<text class="s" x="315" y="223.5" text-anchor="middle">DOWN 90° R1</text><text class="s" x="315" y="271" text-anchor="middle">UP 90° R1</text>
+<text class="s" x="136" y="200" text-anchor="middle">DOWN</text><text class="s" x="494" y="200" text-anchor="middle">DOWN</text>
+<g class="nb"><circle cx="450" cy="65" r="9"/><text x="450" y="65">2</text></g><g class="nb"><circle cx="450" cy="127.5" r="9"/><text x="450" y="127.5">4</text></g><g class="nb"><circle cx="450" cy="227.5" r="9"/><text x="450" y="227.5">3</text></g><g class="nb"><circle cx="450" cy="275" r="9"/><text x="450" y="275">1</text></g><g class="nb"><circle cx="136" cy="170" r="9"/><text x="136" y="170">5</text></g><g class="nb"><circle cx="494" cy="170" r="9"/><text x="494" y="170">6</text></g>
+<text x="100" y="44" text-anchor="end">0</text><text x="100" y="69" text-anchor="end">10</text><text x="100" y="131.5" text-anchor="end">35</text>
+<text x="100" y="231.5" text-anchor="end">≈ 75</text><text x="100" y="279" text-anchor="end">≈ 94</text><text x="100" y="301.5" text-anchor="end">≈ 103</text>
+<text x="540" y="56">10</text><text class="m" x="600" y="56">return</text>
+<text x="540" y="100">25</text><text class="m" x="600" y="100">slope</text>
+<text x="540" y="181">≈ 40</text><text class="m" x="600" y="181">base</text>
+<text x="540" y="255">19</text><text class="m" x="600" y="255">wall</text>
+<text x="540" y="290">9</text><text class="m" x="600" y="290">return</text>
+<text x="136" y="246" text-anchor="middle">19</text><text x="494" y="246" text-anchor="middle">19</text>
+<text class="m" x="315" y="180" text-anchor="middle">base</text>
+<path class="d" d="M-10 40V127.5M-15 40h10M-15 127.5h10"/><text x="-16" y="87.8" text-anchor="end">35</text><path class="d" d="M-10 227.5V297.5M-15 227.5h10M-15 297.5h10"/><text x="-16" y="266.5" text-anchor="end">28</text>
+<path class="d" d="M160 330H470M160 325v10M470 325v10"/><text x="315.0" y="324" text-anchor="middle">≈ 124 (scaled)</text>
+</svg></div>
+      <p class="cap">Red dashed lines = bend lines, number = bend order. Left: distance from the top edge (≈ values scaled). Right: width of each strip. 35 and 10 are dimensioned from the top edge, 28 and 9 from the bottom edge. Not to scale.</p>
+    </div>
+    <div class="dia-grid">
+      <div class="dia">
+        <h3>After bending · section (t = 1 assumed)</h3>
+        <div class="svgwrap"><svg viewBox="0 0 440 230" style="max-width:520px;margin:0 auto" role="img" aria-label="Section after bending">
+<polygon class="ft" points="130,70 290,70 354,146 130,146"/>
+<polyline class="p" points="94,146 130,146 130,70 290,70 354,146 394,146"/>
+<g class="nb"><circle cx="130" cy="146" r="9"/><text x="130" y="146">1</text></g><g class="nb"><circle cx="354" cy="146" r="9"/><text x="354" y="146">2</text></g><g class="nb"><circle cx="130" cy="70" r="9"/><text x="130" y="70">3</text></g><g class="nb"><circle cx="290" cy="70" r="9"/><text x="290" y="70">4</text></g>
+<path class="d" d="M130 48H290M130 43v10M290 43v10"/><text x="210.0" y="42" text-anchor="middle">≈ 40</text><path class="d" d="M70 70V146M65 70h10M65 146h10"/><text x="62" y="112.0" text-anchor="end">≈ 20</text><path class="d" d="M94 172H130M94 167v10M130 167v10"/><text x="112.0" y="190" text-anchor="middle">≈ 10</text><path class="d" d="M354 172H394M354 167v10M394 167v10"/><text x="374.0" y="190" text-anchor="middle">≈ 10</text>
+<text class="m" x="316" y="96">50°</text><text class="m" x="210" y="118" text-anchor="middle">side tab 19 (bends 5·6)</text>
+<text class="m" x="210" y="216" text-anchor="middle">both flanges sit on the same plane</text>
+</svg></div>
+        <p class="cap">Strip 19 → wall ≈ 20,6; 9 → return ≈ 9,8; 25 at 50° → drop ≈ 20,2; 10 → return ≈ 10. The two returns end up parallel to the base, about 0,4 apart in height. The side tabs close both ends; their sloped edge follows the 50° face.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Process steps</h2>
+    <ol class="ops">
+      <li><div><h3>Laser cutting of the flat blank</h3><p>Blank ≈ 162 × 103 overall (scaled, to confirm), rounded outer corners, side tabs 19 wide with the sloped top cut.</p></div></li>
+      <li><div><h3>Deburring</h3><p>Cut edges, mainly the tab corners where they meet the slope.</p></div></li>
+      <li><div><h3>Press brake: 6 bends</h3><p>Order: the 2 small returns first (UP, part flat, gauges on the flat edges) → flip → wall and slope (DOWN) → the 2 side tabs (DOWN, short punch). Die V8 for t = 1 (inside R ≈ 1,3).</p></div></li>
+      <li><div><h3>Inspection</h3><p>Both returns flat on a table (no rocking), wall ≈ 20, slope at 50°, tabs square to the base and closing the sides.</p></div></li>
+    </ol>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Order</th><th>Bend</th><th>Bend length</th><th>Part position</th><th>Back gauge</th><th>Tooling</th><th>Check after the bend</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Return 9, UP 90°</td><td class="num">≈ 124</td><td>Flat, drawing face up, bottom edge against the gauge</td><td class="num">9<br>bottom edge</td><td>Straight punch, V8</td><td>Return ≈ 9,8 outside · 90°</td></tr>
+          <tr><td class="num">2</td><td>Return 10, UP 50°</td><td class="num">≈ 124</td><td>Turn 180°, top edge against the gauge</td><td class="num">10<br>top edge</td><td>Straight punch, V8</td><td>Angle 50° (130° inside) · return 10</td></tr>
+          <tr><td class="num">3</td><td>Wall, DOWN 90°</td><td class="num">≈ 124</td><td>Flip the part: return 9 hangs down at ≈ 20 from the bend line</td><td class="num">≈ 19,8<br>on return 9 outer face</td><td>Straight punch, narrow V8 die</td><td>Wall ≈ 20,6 · return 9 parallel to base · 90°</td></tr>
+          <tr><td class="num">4</td><td>Slope, DOWN 50°</td><td class="num">≈ 124</td><td>Same face up, return 10 toward the gauge</td><td class="num">≈ 25,3<br>on the outer corner of bend 2</td><td>Straight punch, V8</td><td>Slope 50° · return 10 parallel to base · both returns on the same plane</td></tr>
+          <tr><td class="num">5</td><td>Left side tab, DOWN 90°</td><td class="num">≈ 40</td><td>Tab toward the gauge; wall and slope stand at each end of the punch</td><td class="num">19<br>tab straight edge</td><td>Short sectional punch ≈ 38</td><td>Tab ≈ 19,8 · 90° · sloped edge follows the slope</td></tr>
+          <tr><td class="num">6</td><td>Right side tab, DOWN 90°</td><td class="num">≈ 40</td><td>Same, turn 180°</td><td class="num">19</td><td>Same as bend 5</td><td>Both ends closed · tabs square to the base</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Drawing check</h2>
+      <dl>
+        <dt>Slope drop</dt><dd>25 at 50° → ≈ 19,2 (≈ tab width 19)</dd>
+        <dt>Tab triangle</dt><dd>19 × ≈ 16 = slope run 25·cos 50°</dd>
+        <dt>Return 9 (flat)</dt><dd>9 → ≈ 9,8 finished (t = 1)</dd>
+        <dt>Wall (flat)</dt><dd>28 − 9 = 19 → ≈ 20,6 finished</dd>
+        <dt>Slope (flat)</dt><dd>35 − 10 = 25 at 50°</dd>
+        <dt>Bend deduction</dt><dd>90°: 1,64 · 50°: 0,56 (t = 1, R1, K = 0,5)</dd>
+      </dl>
+    </section>
+    <div class="note">
+      <h3>To confirm before production</h3>
+      <ul>
+        <li>Thickness and material: not visible. All finished sizes and gauges ≈ assume t = 1.</li>
+        <li>Base size not dimensioned on the photo (≈ 124 × 40 scaled).</li>
+        <li>Bend 3 is a Z-bend with a 19 offset: return 9 hangs ≈ 20 from the V centre, so use a narrow die body.</li>
+        <li>Bends 3 and 4 gauge on already bent edges: let the controller compute them, or make a test part.</li>
+        <li>The 3D model uses sharp corners and the scaled base size.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const W = 124, B = 40, WALL = 19, L9 = 9, SL = 25, L10 = 10, TAB = 19, T = 1;
+  const RISE = TAB / Math.tan(50 * Math.PI / 180);   // 15,9 — tab triangle
+  const R = d => d * Math.PI / 180;
+
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.prepend(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 1, 5000);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6a7284, 1.0));
+  const d1 = new THREE.DirectionalLight(0xffffff, 0.85); d1.position.set(300, 500, 600); scene.add(d1);
+  const d2 = new THREE.DirectionalLight(0xffffff, 0.35); d2.position.set(-500, -200, -400); scene.add(d2);
+
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x2a3038 });
+  const steel = 0xb9c0c8;
+  const meshes = {};
+  function plate(shape, name) {
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: T, bevelEnabled: false });
+    geo.translate(0, 0, -T);
+    const mat = new THREE.MeshStandardMaterial({ color: steel, metalness: 0.55, roughness: 0.42, side: THREE.DoubleSide });
+    const m = new THREE.Mesh(geo, mat);
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), lineMat));
+    meshes[name] = m;
+    return m;
+  }
+  function poly(pts) { const s = new THREE.Shape(); pts.forEach((p, i) => i ? s.lineTo(p[0], p[1]) : s.moveTo(p[0], p[1])); s.closePath(); return s; }
+  const rect = (x0, y0, x1, y1) => poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]]);
+
+  const outer = new THREE.Group(); outer.rotation.x = -Math.PI / 2; scene.add(outer);   // base horizontal, bends hang down
+  const root = new THREE.Group(); root.position.set(-W / 2, -B / 2, 10); outer.add(root);
+  root.add(plate(rect(0, 0, W, B), 'base'));
+
+  const P = {};
+  function pivot(name, parent, pos, axis, ang, shape) {
+    const g = new THREE.Group(); g.position.set(pos[0], pos[1], pos[2]);
+    g.add(plate(shape, name)); parent.add(g);
+    P[name] = { g, axis, ang };
+    return g;
+  }
+  const wall = pivot('wall', root, [0, 0, 0], 'x', R(90), rect(0, -WALL, W, 0));
+  pivot('ret9', wall, [0, -WALL, 0], 'x', R(-90), rect(0, -L9, W, 0));
+  const slope = pivot('slope', root, [0, B, 0], 'x', R(-50), rect(0, 0, W, SL));
+  pivot('ret10', slope, [0, SL, 0], 'x', R(50), rect(0, 0, W, L10));
+  pivot('tabL', root, [0, 0, 0], 'y', R(-90), poly([[0,0],[0,B],[-TAB,B+RISE],[-TAB,0]]));
+  pivot('tabR', root, [W, 0, 0], 'y', R(90), poly([[0,0],[TAB,0],[TAB,B+RISE],[0,B]]));
+
+  const STEPS = [
+    { part: null, title: 'Laser-cut blank', text: 'Flat blank seen from the drawing face. 2 UP bends (the small returns) and 4 DOWN bends.',
+      gauge: '—', after: ['Blank ≈ 162 × 103 (scaled, to confirm)', 'Tabs 19 wide with the sloped top', 'Rounded outer corners'] },
+    { part: 'ret9', title: 'Bend 1 · return 9 UP 90°', text: 'Part flat, drawing face up, bottom edge against the back gauge.',
+      gauge: '9 (bottom edge)', after: ['Return ≈ 9,8 outside (t = 1)', 'Angle 90° along the full length'] },
+    { part: 'ret10', title: 'Bend 2 · return 10 UP 50°', text: 'Turn the part 180°, top edge against the back gauge. 50° only: check the angle on the first part.',
+      gauge: '10 (top edge)', after: ['Angle 50° (130° inside)', 'Return 10'] },
+    { part: 'wall', title: 'Bend 3 · wall DOWN 90°', text: 'Flip the part. This is a Z-bend: return 9 hangs down ≈ 20 from the V centre, so use a narrow die body.',
+      gauge: '≈ 19,8 (return 9 outer face)', after: ['Wall ≈ 20,6 (base top → return underside)', 'Return 9 parallel to the base', 'Angle 90°'] },
+    { part: 'slope', title: 'Bend 4 · slope DOWN 50°', text: 'Same face up, return 10 toward the back gauge.',
+      gauge: '≈ 25,3 (outer corner of bend 2)', after: ['Slope at 50°', 'Return 10 parallel to the base', 'Both returns flat on a table, no rocking'] },
+    { part: 'tabL', title: 'Bend 5 · left side tab DOWN 90°', text: 'Short sectional punch ≈ 38 on the base edge only: the wall and the slope stand at each end of the punch.',
+      gauge: '19 (tab straight edge)', after: ['Tab ≈ 19,8 outside · 90°', 'Sloped edge follows the 50° face'] },
+    { part: 'tabR', title: 'Bend 6 · right side tab DOWN 90°', text: 'Same setup, turn the part 180°. Both ends of the cover are now closed.',
+      gauge: '19 (tab straight edge)', after: ['Both tabs square to the base', 'Small gap between tabs and wall / slope is normal', 'Final check on a flat table'] }
+  ];
+  const ORDER = STEPS.slice(1).map(s => s.part);
+  const angle = {}; ORDER.forEach(k => angle[k] = 0);
+  let step = 0, anim = null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function targetsFor(k) { const t = {}; ORDER.forEach((p, i) => t[p] = i < k ? 1 : 0); return t; }
+  function applyAngles() { ORDER.forEach(k => { const p = P[k]; p.g.rotation[p.axis] = p.ang * angle[k]; }); }
+  function highlight() {
+    const active = STEPS[step].part;
+    const accent = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1f5fd1');
+    Object.keys(meshes).forEach(k => meshes[k].material.color.set(k === active ? accent : new THREE.Color(steel)));
+  }
+  function go(k) {
+    step = Math.max(0, Math.min(STEPS.length - 1, k));
+    const from = Object.assign({}, angle), to = targetsFor(step);
+    const t0 = performance.now(), dur = reduce ? 0 : 900;
+    anim = (now) => {
+      const u = dur ? Math.min(1, (now - t0) / dur) : 1;
+      const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      ORDER.forEach(p => angle[p] = from[p] + (to[p] - from[p]) * e);
+      applyAngles();
+      if (u >= 1) anim = null;
+    };
+    updateUI();
+  }
+  const $ = id => document.getElementById(id);
+  const dots = $('dots');
+  for (let i = 1; i < STEPS.length; i++) dots.appendChild(document.createElement('span'));
+  function updateUI() {
+    $('stepNo').textContent = 'STEP ' + step + ' / ' + (STEPS.length - 1);
+    $('stepTitle').textContent = STEPS[step].title;
+    $('stepText').textContent = STEPS[step].text;
+    $('stepGauge').textContent = STEPS[step].gauge;
+    const ul = $('stepAfter'); ul.textContent = '';
+    STEPS[step].after.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    $('bPrev').disabled = step === 0;
+    $('bNext').disabled = step === STEPS.length - 1;
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i < step));
+    highlight();
+  }
+  $('bNext').onclick = () => go(step + 1);
+  $('bPrev').onclick = () => go(step - 1);
+  $('bFlat').onclick = () => go(0);
+  $('bDone').onclick = () => go(STEPS.length - 1);
+  function view(name) {
+    const pos = { iso: [150, 130, 170], face: [0, 260, 1], prof: [260, 10, 0] }[name];
+    camera.position.set(pos[0], pos[1], pos[2]);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }
+  $('v-iso').onclick = () => view('iso');
+  $('v-face').onclick = () => view('face');
+  $('v-prof').onclick = () => { if (step < STEPS.length - 1) go(STEPS.length - 1); view('prof'); };
+  function applyTheme() {
+    const edge = getComputedStyle(document.documentElement).getPropertyValue('--edge').trim();
+    if (edge) lineMat.color.set(edge);
+    highlight();
+  }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  function loop(now) { if (anim) anim(now); controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); }
+  view('iso');
+  go(STEPS.length - 1);
+  applyTheme();
+  requestAnimationFrame(loop);
+})();
+</script>
