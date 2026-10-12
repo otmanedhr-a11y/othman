@@ -133,8 +133,8 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
       <span class="chip">Width <b>120</b></span>
       <span class="chip">Bends <b>2 × DOWN 90° R4</b></span>
       <span class="chip">Holes <b>4</b> in the base</span>
-      <span class="chip est">Thickness <b>4</b> (assumed)</span>
-      <span class="chip est">Flat blank <b>396,85 × 120</b> (calculated)</span>
+      <span class="chip">Thickness <b>4</b></span>
+      <span class="chip">Flat blank <b>396,85 × 120</b></span>
     </div>
   </header>
 
@@ -203,7 +203,7 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
   <section class="card">
     <h2>Process steps</h2>
     <ol class="ops">
-      <li><div><h3>Laser cutting of the flat blank</h3><p>396,85 × 120 in S275JR t = 4 (to confirm), with the 4 holes in the base: 72 from each bend line, rows at 20 and 100 across the width. 5 parts.</p></div></li>
+      <li><div><h3>Laser cutting of the flat blank</h3><p>396,85 × 120 in S275JR t = 4, with the 4 holes in the base: 72 from each bend line, rows at 20 and 100 across the width. 5 parts.</p></div></li>
       <li><div><h3>Deburring</h3><p>Edges and holes.</p></div></li>
       <li><div><h3>Press brake: 2 bends DOWN 90° R4 over 120</h3><p>V24 die (inside R ≈ 4 at t = 4), about 5 t for 120 long. A V32 is easier on the machine but gives R ≈ 5 and a slightly different flat length.</p></div></li>
       <li><div><h3>Inspection, then painting RAL 9010</h3><p>100 / 210 / 100, inside 202, legs parallel, holes 72 from the bends.</p></div></li>
@@ -233,7 +233,7 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
     <div class="note">
       <h3>To confirm before production</h3>
       <ul>
-        <li>Thickness is not written. At the drawing scale the flat blank measures ≈ 400, which fits t = 4 (396,85). t = 3 would give ≈ 389, t = 5 ≈ 384.</li>
+        <li>Thickness 4 confirmed by the workshop (the drawing does not show it).</li>
         <li>Hole diameter not readable on the photo (≈ 10 scaled). Rows at 20 / 100 across the width are scaled too. Cut from the DXF.</li>
         <li>100 / 210 taken as outside dimensions.</li>
         <li>On your machine the real deduction may differ from 6,57: use the controller value or a test part.</li>
@@ -282,7 +282,7 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
   pivot('leg1', [0, 0, 0], R(-90), rect(0, -LEG, LEN, 0));
   pivot('leg2', [0, B, 0], R(90), rect(0, 0, LEN, LEG));
   const STEPS = [
-    { part: null, title: 'Laser-cut blank', text: 'Blank 396,85 × 120 (t = 4 assumed) with the 4 holes. Both bends DOWN: same face up for both.',
+    { part: null, title: 'Laser-cut blank', text: 'Blank 396,85 × 120 (t = 4) with the 4 holes. Both bends DOWN: same face up for both.',
       gauge: '—', after: ['Blank 396,85 × 120', 'Holes 72 from each bend line, 59,4 apart', 'Hole rows 20 / 100 across the width'] },
     { part: 'leg1', title: 'Bend 1 · leg 1 DOWN 90°', text: 'Part flat, one blank edge against the back gauge, bend over the 120 width.',
       gauge: '96,71 (blank edge)', after: ['Leg 100 outside', 'Angle 90°', 'Remaining flat 303,43'] },
