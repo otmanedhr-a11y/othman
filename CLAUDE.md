@@ -42,3 +42,11 @@ techniques en anglais (flange, return, web, tab, end plate, base, notch,
 back gauge, bend, flat blank, punch, gooseneck, die…). Les pages de
 fabrication sont entièrement en anglais. Garder les virgules décimales des
 plans (32,53).
+
+## Notes par client
+
+- **TE Connectivity** : les cotes de la coupe s'arrêtent au début du rayon de pli
+  (tangente), pas à l'arête vive. Ajouter (R+t)·tan(angle/2) pour retrouver la cote
+  extérieure ronde (ex. 117,51 + 2,49 = 120). Vérifié avec R = 3, t = 3, K ≈ 0,33 :
+  le développé calculé tombe à ±0,5 du flan réel découpé depuis leur DXF.
+- Quand l'atelier donne la longueur réelle du flan découpé, elle prime sur le calcul.
