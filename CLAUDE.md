@@ -50,3 +50,8 @@ plans (32,53).
   extérieure ronde (ex. 117,51 + 2,49 = 120). Vérifié avec R = 3, t = 3, K ≈ 0,33 :
   le développé calculé tombe à ±0,5 du flan réel découpé depuis leur DXF.
 - Quand l'atelier donne la longueur réelle du flan découpé, elle prime sur le calcul.
+
+## Réponses
+
+- Chaque plan / photo est traité tout seul : ne pas récapituler ni réécrire les
+  pièces précédentes dans la réponse. Ne parler que de la pièce envoyée.
