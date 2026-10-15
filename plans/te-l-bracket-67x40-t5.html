@@ -1,0 +1,317 @@
+<title>TE L bracket 67 × 40</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: atelier sheet — 3D viewer with bend stepper on top, then the routing card (gamme) as a table, assumptions last. */
+:root {
+  --bg: #eef0f2;
+  --panel: #ffffff;
+  --ink: #1b2129;
+  --muted: #5d6773;
+  --line: #d3d8de;
+  --accent: #1f5fd1;      /* layout-fluid blue */
+  --accent-soft: #e3ecfb;
+  --warn: #9a5b00;
+  --warn-soft: #fff3df;
+  --viewer: #e4e8ec;
+  --edge: #2a3038;
+  --bend: #d0502a;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+    --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+    --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161b; --panel: #1a2027; --ink: #e5e9ee; --muted: #98a3af; --line: #2d353f;
+  --accent: #6c9cf0; --accent-soft: #1d2a40; --warn: #f0b45a; --warn-soft: #2e2516;
+  --viewer: #20272f; --edge: #0b0e12; --bend: #f0875c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 48px; display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 600; font-size: 24px; margin: 0; letter-spacing: .01em; }
+.specs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { font-family: var(--f-mono); font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); font-variant-numeric: tabular-nums; }
+.chip b { font-weight: 500; color: var(--accent); }
+.chip.est { border-style: dashed; }
+
+.viewer { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: grid; }
+#stage { position: relative; height: clamp(320px, 56vh, 560px); background: var(--viewer); touch-action: none; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+.views { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; }
+.views button { font-family: var(--f-mono); font-size: 12px; padding: 4px 9px; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: var(--muted); }
+.stepper { display: grid; gap: 12px; padding: 14px 16px 16px; border-top: 1px solid var(--line); }
+.step-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.step-no { font-family: var(--f-mono); font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.step-title { font-family: var(--f-display); font-size: 22px; font-weight: 600; }
+.step-text { margin: 0; color: var(--muted); max-width: 70ch; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: inherit; font-size: 14px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 600; }
+button:disabled { opacity: .45; cursor: default; }
+.checks { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 10px 20px; padding: 12px 14px; background: var(--accent-soft); border-radius: 4px; }
+.checks span { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.checks b { font-family: var(--f-mono); font-weight: 500; font-size: 15px; font-variant-numeric: tabular-nums; }
+.checks ul { margin: 2px 0 0; padding-left: 18px; display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.checks .after { min-width: 0; }
+@media (max-width: 560px) { .checks { grid-template-columns: 1fr; } }
+
+.dia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.dia { display: grid; gap: 6px; min-width: 0; }
+.dia h3 { margin: 0; font-size: 14px; font-family: var(--f-mono); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dia .svgwrap { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.dia svg { display: block; width: 100%; min-width: 300px; height: auto; }
+.dia.wide svg { min-width: 560px; }
+.dia .cap { margin: 0; font-size: 13px; color: var(--muted); }
+svg .o { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.5; }
+svg .p { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: miter; }
+svg .ft { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 1.2; }
+svg .ghost { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+svg .b { stroke: var(--bend); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+svg .d { stroke: var(--muted); stroke-width: 1; fill: none; }
+svg .hole { fill: var(--bg); stroke: var(--ink); stroke-width: 1; }
+svg text { font-family: var(--f-mono); font-size: 12px; fill: var(--ink); }
+svg text.m { fill: var(--muted); font-size: 11px; }
+svg text.s { fill: var(--bend); font-size: 10px; }
+svg.lg text { font-size: 17px; }
+svg.lg text.m { font-size: 15px; }
+svg text.big { font-size: 14px; font-weight: 500; }
+svg .nb circle { fill: var(--bend); }
+svg .nb text { fill: #fff; font-size: 11px; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
+.dots { display: flex; gap: 4px; margin-left: auto; }
+.dots span { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
+.dots span.on { background: var(--accent); }
+
+section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px 16px; display: grid; gap: 14px; min-width: 0; }
+ol.ops { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: op; }
+ol.ops li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; min-width: 0; }
+ol.ops li::before { counter-increment: op; content: "OP " counter(op, decimal-leading-zero); font-family: var(--f-mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+ol.ops h3 { margin: 0; font-size: 16px; font-weight: 600; }
+ol.ops p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dir { font-family: var(--f-mono); font-size: 12px; padding: 1px 7px; border-radius: 3px; white-space: nowrap; }
+.dir.up { background: var(--accent-soft); color: var(--accent); }
+.dir.down { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.note { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 12px 14px; border-radius: 4px; display: grid; gap: 6px; }
+.note h3 { margin: 0; font-size: 14px; color: var(--warn); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+.note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">TE Connectivity · S235JR · RAL 7035 · qty 01 · t = 5</div>
+    <h1>L bracket 67 × 40, 5 mm</h1>
+    <div class="specs">
+      <span class="chip">Vertical <b>67</b> · 100 wide</span>
+      <span class="chip">Foot <b>40</b> · 30 wide</span>
+      <span class="chip">Thickness <b>5</b></span>
+      <span class="chip">Bend <b>1 × 90°</b> over 30</span>
+      <span class="chip est">Flat blank <b>≈ 97,47</b> (calculated, R5)</span>
+      <span class="chip">Holes <b>3 × Ø5,3</b> + slots <b>4 × 3,2</b></span>
+    </div>
+  </header>
+  <div class="viewer">
+    <div id="stage">
+      <div class="views">
+        <button type="button" id="v-iso">Iso</button>
+        <button type="button" id="v-face">Front</button>
+        <button type="button" id="v-prof">Profile</button>
+      </div>
+      <div class="hint">Drag to rotate · scroll / pinch to zoom</div>
+    </div>
+    <div class="stepper">
+      <div class="step-head">
+        <span class="step-no" id="stepNo">STEP 0 / 1</span>
+        <span class="step-title" id="stepTitle"></span>
+      </div>
+      <p class="step-text" id="stepText"></p>
+      <div class="checks">
+        <div class="gauge"><span>Back gauge</span><b id="stepGauge"></b></div>
+        <div class="after"><span>Check after this bend</span><ul id="stepAfter"></ul></div>
+      </div>
+      <div class="controls">
+        <button type="button" id="bFlat">Flat</button>
+        <button type="button" id="bPrev">◀ Previous</button>
+        <button type="button" id="bNext" class="primary">Next bend ▶</button>
+        <button type="button" id="bDone">Finished part</button>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <section class="card">
+    <h2>Before and after bending</h2>
+    <div class="dia-grid">
+      <div class="dia">
+        <h3>Before bending · flat blank</h3>
+        <div class="svgwrap"><svg viewBox="0 0 640 450" style="max-width:640px" role="img" aria-label="Flat blank with bend lines">
+<path class="o" d="M90.0 50.0H198.0V217.3H450.0V400.9H90.0Z"/><circle class="hole" cx="120.6" cy="86.0" r="9.5"/><circle class="hole" cx="178.2" cy="86.0" r="9.5"/><circle class="hole" cx="149.4" cy="107.6" r="9.5"/><rect class="hole" x="303.8" y="327.5" width="11.5" height="40.3" rx="5.8"/><rect class="hole" x="303.8" y="264.8" width="11.5" height="40.3" rx="5.8"/><rect class="hole" x="383.0" y="327.5" width="11.5" height="40.3" rx="5.8"/><rect class="hole" x="383.0" y="264.8" width="11.5" height="40.3" rx="5.8"/>
+<line class="b" x1="90.0" y1="176.8" x2="198.0" y2="176.8"/>
+<g class="nb"><circle cx="214.0" cy="176.8" r="9"/><text x="214.0" y="176.8">1</text></g><text class="s" x="228.0" y="180.8">90° (R5)</text>
+<text x="80.0" y="54.0" text-anchor="end">0</text><text x="80.0" y="180.8" text-anchor="end">35,24</text><text x="80.0" y="404.9" text-anchor="end">97,47</text>
+<text x="464.0" y="313.1">62,24</text><text class="m" x="464.0" y="329.1">vertical</text>
+<text x="212.0" y="117.4">35,24</text><text class="m" x="212.0" y="133.4">foot</text>
+<path class="d" d="M90.0 36.0H198.0M90.0 31.0v10M198.0 31.0v10"/><text x="144.0" y="30.0" text-anchor="middle">30</text><path class="d" d="M90.0 422.9H450.0M90.0 417.9v10M450.0 417.9v10"/><text x="270.0" y="440.9" text-anchor="middle">100</text>
+</svg></div>
+        <p class="cap">Red dashed line = bend line (only across the 30 wide neck). Left: distance from the foot end. Right: length of each part. Not to scale.</p>
+      </div>
+      <div class="dia">
+        <h3>After bending · section</h3>
+        <div class="svgwrap"><svg viewBox="0 0 320 300" style="max-width:380px;margin:0 auto" role="img" aria-label="Section after bending">
+<polyline class="p" points="110,40 110,241 230,241"/>
+<g class="nb"><circle cx="110" cy="241" r="9"/><text x="110" y="241">1</text></g>
+<path class="d" d="M78 40V241M73 40h10M73 241h10"/><text x="70" y="144.5" text-anchor="end">67</text><path class="d" d="M110 270H230M110 265v10M230 265v10"/><text x="170.0" y="288" text-anchor="middle">40</text>
+<text class="m" x="122" y="60">t = 5</text><text class="m" x="122" y="226">R5</text>
+</svg></div>
+        <p class="cap">Strip 35,24 → foot 40; 62,24 → vertical 67 (outside dimensions).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Process steps</h2>
+    <ol class="ops">
+      <li><div><h3>Laser cutting</h3><p>L-shaped blank ≈ 97,47 long, 5 mm, from the DXF: foot 30 wide with 3 × Ø5,3, vertical part 100 wide with 4 slots 3,2 wide, R5 corners. The step between the 30 neck and the 100 part is ≈ 6 from the bend zone.</p></div></li>
+      <li><div><h3>Deburring</h3><p>Holes, slots and edges.</p></div></li>
+      <li><div><h3>Press brake: 1 bend 90°</h3><p>V40 die (8 × t, inside R ≈ 5–6). Bend length only 30, ≈ 1,1 t needed. Foot on the gauge side, big plate on the operator side.</p></div></li>
+      <li><div><h3>Inspection, then painting RAL 7035</h3><p>67 / 40 outside, 90°, holes and slots position.</p></div></li>
+    </ol>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Order</th><th>Bend</th><th>Bend length</th><th>Part position</th><th>Back gauge</th><th>Tooling</th><th>Check after the bend</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Foot, 90°</td><td class="num">30</td><td>Flat, foot end against the gauge (one finger, centred on the 30 foot)</td><td class="num">35,24<br>foot end</td><td>Straight punch, V40</td><td>Foot 40 · vertical 67 · 90°</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Drawing check</h2>
+      <dl>
+        <dt>Foot (flat)</dt><dd>35,24 → 40</dd>
+        <dt>Vertical (flat)</dt><dd>62,24 → 67</dd>
+        <dt>Bend deduction</dt><dd>9,53 (t = 5, R5, K ≈ 0,33)</dd>
+        <dt>Weight</dt><dd>≈ 0,25 kg</dd>
+      </dl>
+    </section>
+    <div class="note">
+      <h3>To confirm before production</h3>
+      <ul>
+        <li>Inside bend radius not written: R5 (= t) assumed. Measure the cut blank: if it is not ≈ 97,47, keep the vertical at 67 and set the back gauge to (blank length − 62,24).</li>
+        <li>Slot rows and the height of the 100 wide part are scaled from the photo; they come from the DXF.</li>
+        <li>Foot holes: 8,5 and 24,5 from the side at 10 from the foot end, third hole at 16,5 / 16 (read from the drawing).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const FOOT = 35.24, VERT = 62.24, N = 11.24, T = 5;
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.prepend(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 1, 3000);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6a7284, 1.0));
+  const d1 = new THREE.DirectionalLight(0xffffff, 0.85); d1.position.set(300, 500, 600); scene.add(d1);
+  const d2 = new THREE.DirectionalLight(0xffffff, 0.35); d2.position.set(-500, -200, -400); scene.add(d2);
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x2a3038 });
+  const steel = 0xb9c0c8; const meshes = {};
+  function plate(shape, name) {
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: T, bevelEnabled: false, curveSegments: 20 });
+    geo.translate(0, 0, -T);
+    const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: steel, metalness: 0.55, roughness: 0.42, side: THREE.DoubleSide }));
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), lineMat));
+    meshes[name] = m; return m;
+  }
+  function poly(pts) { const s = new THREE.Shape(); pts.forEach((p, i) => i ? s.lineTo(p[0], p[1]) : s.moveTo(p[0], p[1])); s.closePath(); return s; }
+  function circ(x, y, r) { const p = new THREE.Path(); p.absarc(x, y, r, 0, Math.PI * 2, true); return p; }
+  function slot(x, yc) { const p = new THREE.Path(); p.moveTo(x + 1.6, yc - 4); p.lineTo(x + 1.6, yc + 4); p.absarc(x, yc + 4, 1.6, 0, Math.PI, false); p.lineTo(x - 1.6, yc - 4); p.absarc(x, yc - 4, 1.6, Math.PI, 2 * Math.PI, false); return p; }
+  const root = new THREE.Group(); root.position.set(-50, -VERT / 2, 10); scene.add(root);
+  const v = poly([[0,0],[30,0],[30,N],[100,N],[100,VERT],[0,VERT]]);
+  [61, 83].forEach(x => [14.8, 32.2].forEach(d => v.holes.push(slot(x, VERT - d))));
+  root.add(plate(v, 'vertical'));
+  const ft = poly([[0,-FOOT],[30,-FOOT],[30,0],[0,0]]);
+  [[8.5,10],[24.5,10],[16.5,16]].forEach(([x,d]) => ft.holes.push(circ(x, -FOOT + d, 2.65)));
+  const g = new THREE.Group(); g.add(plate(ft, 'foot')); root.add(g);
+  const STEPS = [
+    { part: null, title: 'Laser-cut blank', text: 'L-shaped blank, 5 mm, from the DXF. One bend across the 30 wide neck.', gauge: '—', after: ['Blank ≈ 97,47 long', 'Foot 30 wide with 3 × Ø5,3', 'Vertical part 100 wide with 4 slots'] },
+    { part: 'foot', title: 'Bend 1 · foot 90°', text: 'Foot end against the back gauge, one finger centred on the 30 foot. Big plate on the operator side. V40 die.', gauge: '35,24 (foot end)', after: ['Foot 40 outside', 'Vertical 67 outside', 'Angle 90°'] }
+  ];
+  let step = 0, a = 0, anim = null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function apply() { g.rotation.x = -Math.PI / 2 * a; }
+  function highlight() {
+    const accent = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1f5fd1');
+    Object.keys(meshes).forEach(k => meshes[k].material.color.set(k === STEPS[step].part ? accent : new THREE.Color(steel)));
+  }
+  function go(k) {
+    step = Math.max(0, Math.min(1, k));
+    const from = a, to = step, t0 = performance.now(), dur = reduce ? 0 : 900;
+    anim = now => { const u = dur ? Math.min(1, (now - t0) / dur) : 1; const e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; a = from + (to - from) * e; apply(); if (u >= 1) anim = null; };
+    const $ = id => document.getElementById(id);
+    $('stepNo').textContent = 'STEP ' + step + ' / 1';
+    $('stepTitle').textContent = STEPS[step].title; $('stepText').textContent = STEPS[step].text; $('stepGauge').textContent = STEPS[step].gauge;
+    const ul = $('stepAfter'); ul.textContent = ''; STEPS[step].after.forEach(x => { const li = document.createElement('li'); li.textContent = x; ul.appendChild(li); });
+    $('bPrev').disabled = step === 0; $('bNext').disabled = step === 1;
+    [...$('dots').children].forEach((d, i) => d.classList.toggle('on', i < step));
+    highlight();
+  }
+  document.getElementById('dots').appendChild(document.createElement('span'));
+  document.getElementById('bNext').onclick = () => go(step + 1);
+  document.getElementById('bPrev').onclick = () => go(step - 1);
+  document.getElementById('bFlat').onclick = () => go(0);
+  document.getElementById('bDone').onclick = () => go(1);
+  function view(n) { const p = { iso: [140, 110, 170], face: [0, 0, 260], prof: [260, 0, -20] }[n]; camera.position.set(p[0], p[1], p[2]); controls.target.set(0, 0, -15); controls.update(); }
+  document.getElementById('v-iso').onclick = () => view('iso');
+  document.getElementById('v-face').onclick = () => view('face');
+  document.getElementById('v-prof').onclick = () => { go(1); view('prof'); };
+  function applyTheme() { const e = getComputedStyle(document.documentElement).getPropertyValue('--edge').trim(); if (e) lineMat.color.set(e); highlight(); }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  function resize() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  new ResizeObserver(resize).observe(stage); resize();
+  (function loop(now) { if (anim) anim(now); controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })(performance.now());
+  view('iso'); go(1); applyTheme();
+})();
+</script>
