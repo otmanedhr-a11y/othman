@@ -123,18 +123,19 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
 
 
 
+
 <div class="wrap">
   <header>
-    <div class="eyebrow">TE Connectivity drawing · part number not visible · t = 3 · 2 bends · 2 windows · 8 × M4</div>
+    <div class="eyebrow">TE Connectivity drawing · part number not visible · t = 3 · real blank 256 (from the DXF, measured in the workshop)</div>
     <h1>Bracket with 120° bend</h1>
     <div class="specs">
       <span class="chip">Width <b>175</b></span>
       <span class="chip">Leg <b>161,54</b></span>
-      <span class="chip">Flange <b>56,54</b></span>
+      <span class="chip">Flange <b>≈ 62,5</b> outside</span>
       <span class="chip">Lip <b>40</b></span>
       <span class="chip">Angle <b>120°</b> + <b>90°</b></span>
       <span class="chip">Thickness <b>3</b></span>
-      <span class="chip est">Flat blank <b>250,93 × 175</b> (calculated, R3 assumed)</span>
+      <span class="chip">Flat blank <b>256 × 175</b> (measured)</span>
     </div>
   </header>
 
@@ -167,36 +168,44 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
     </div>
   </div>
 
+  <div class="note">
+    <h3>Corrected: blank 256, not 250,93</h3>
+    <ul>
+      <li>The first version read 40 / 56,54 / 161,54 as outside dimensions and gave 250,93. The cut blank measures 256.</li>
+      <li>The drawing's own front view height 192,8 gives the flange: 192,8 = 161,54 + flange × sin 30° → flange ≈ 62,5 outside to the sharps. The 56,54 on the section is measured to other reference faces.</li>
+      <li>With lip 40, flange 62,5, leg 161,54 and the real V24 radius (≈ 4): 256,4. That matches the 256 blank, so the extra ≈ 5 mm is in the flange. The back gauges barely change.</li>
+    </ul>
+  </div>
+
   <section class="card">
     <h2>Before and after bending</h2>
     <div class="dia wide">
-      <h3>Before bending · flat blank 250,93 × 175</h3>
+      <h3>Before bending · flat blank 256 × 175</h3>
       <div class="svgwrap"><svg viewBox="0 0 720 330" role="img" aria-label="Flat blank with bend lines">
-<rect class="o" x="60.0" y="60.0" width="552.0" height="210.0"/><rect class="hole" x="159.1" y="72.0" width="77.0" height="84.0" rx="6"/><rect class="hole" x="159.1" y="174.0" width="77.0" height="84.0" rx="6"/><circle class="hole" cx="269.9" cy="87.0" r="3.5"/><circle class="hole" cx="269.9" cy="144.0" r="3.5"/><circle class="hole" cx="269.9" cy="192.0" r="3.5"/><circle class="hole" cx="269.9" cy="240.0" r="3.5"/><circle class="hole" cx="598.8" cy="87.0" r="3.5"/><circle class="hole" cx="598.8" cy="144.0" r="3.5"/><circle class="hole" cx="598.8" cy="192.0" r="3.5"/><circle class="hole" cx="598.8" cy="240.0" r="3.5"/>
-<path class="b" d="M142.6 60.0V270.0M259.1 60.0V270.0"/>
-<g class="nb"><circle cx="142.6" cy="76.0" r="9"/><text x="142.6" y="76.0">1</text></g><g class="nb"><circle cx="259.1" cy="76.0" r="9"/><text x="259.1" y="76.0">2</text></g>
-<text class="s" x="147.6" y="264.0">90°</text><text class="s" x="264.1" y="264.0">60° (120° inside)</text>
-<text x="60.0" y="48" text-anchor="middle">0</text><text x="142.6" y="48" text-anchor="middle">37,53</text><text x="259.1" y="48" text-anchor="middle">90,50</text><text x="612.0" y="48" text-anchor="middle">250,93</text>
-<text x="101.3" y="294" text-anchor="middle">37,53</text><text x="200.8" y="294" text-anchor="middle">52,97</text><text x="435.6" y="294" text-anchor="middle">160,43</text>
-<text class="m" x="101.3" y="310" text-anchor="middle">lip</text><text class="m" x="200.8" y="310" text-anchor="middle">flange</text><text class="m" x="435.6" y="310" text-anchor="middle">leg</text>
+<rect class="o" x="60.0" y="60.0" width="550.4" height="210.0"/><rect class="hole" x="156.0" y="72.0" width="75.2" height="84.0" rx="6"/><rect class="hole" x="156.0" y="174.0" width="75.2" height="84.0" rx="6"/><circle class="hole" cx="276.1" cy="87.0" r="3.5"/><circle class="hole" cx="276.1" cy="144.0" r="3.5"/><circle class="hole" cx="276.1" cy="192.0" r="3.5"/><circle class="hole" cx="276.1" cy="240.0" r="3.5"/><circle class="hole" cx="597.5" cy="87.0" r="3.5"/><circle class="hole" cx="597.5" cy="144.0" r="3.5"/><circle class="hole" cx="597.5" cy="192.0" r="3.5"/><circle class="hole" cx="597.5" cy="240.0" r="3.5"/>
+<path class="b" d="M140.2 60.0V270.0M265.6 60.0V270.0"/>
+<g class="nb"><circle cx="140.2" cy="76.0" r="9"/><text x="140.2" y="76.0">1</text></g><g class="nb"><circle cx="265.6" cy="76.0" r="9"/><text x="265.6" y="76.0">2</text></g>
+<text class="s" x="145.2" y="264.0">90°</text><text class="s" x="270.6" y="264.0">60° (120° inside)</text>
+<text x="60.0" y="48" text-anchor="middle">0</text><text x="140.2" y="48" text-anchor="middle">37,32</text><text x="265.6" y="48" text-anchor="middle">95,62</text><text x="610.4" y="48" text-anchor="middle">256</text>
+<text x="100.1" y="294" text-anchor="middle">37,32</text><text x="202.9" y="294" text-anchor="middle">58,30</text><text x="438.0" y="294" text-anchor="middle">160,38</text>
+<text class="m" x="100.1" y="310" text-anchor="middle">lip</text><text class="m" x="202.9" y="310" text-anchor="middle">flange</text><text class="m" x="438.0" y="310" text-anchor="middle">leg</text>
 <path class="d" d="M650 60.0V270.0M645 60.0h10M645 270.0h10"/><text x="660" y="169.0" text-anchor="start">175</text>
-<text class="m" x="435.6" y="164.4" text-anchor="middle">8 × M4 · rows 4,93 / 154,43 from bend 2</text>
-<text class="m" x="200.8" y="168.4" text-anchor="middle">2 × 70 × 35</text>
+<text class="m" x="438.0" y="164.4" text-anchor="middle">8 × M4 · rows 6 / 155,5 from the leg end</text>
 </svg></div>
       <p class="cap">Red dashed lines = bend lines, number = bend order. Top: distance from the lip edge. Bottom: width of each strip. Holes across the width at 22,5 / 70 / 110 / 150 from one side. Windows 10 from each side, 15 apart. Not to scale.</p>
     </div>
     <div class="dia-grid">
       <div class="dia">
-        <h3>After bending · section (outside, to virtual sharps)</h3>
+        <h3>After bending · section (outside, to sharps)</h3>
         <div class="svgwrap"><svg viewBox="0 0 420 330" style="max-width:460px;margin:0 auto" role="img" aria-label="Section after bending">
-<polyline class="p" points="210.3,88.3 236.3,43.3 300,80 300,290"/>
-<g class="nb"><circle cx="236.3" cy="43.3" r="9"/><text x="236.3" y="43.3">1</text></g><g class="nb"><circle cx="300" cy="80" r="9"/><text x="300" y="80">2</text></g>
+<polyline class="p" points="199.3,93.7 225.3,48.7 300,80 300,290"/>
+<g class="nb"><circle cx="225.3" cy="48.7" r="9"/><text x="225.3" y="48.7">1</text></g><g class="nb"><circle cx="300" cy="80" r="9"/><text x="300" y="80">2</text></g>
 <path class="d" d="M340 80V290M335 80h10M335 290h10"/><text x="350" y="189.0" text-anchor="start">161,54</text>
-<text x="282" y="50" text-anchor="middle">56,54</text><text x="206" y="58" text-anchor="end">40</text>
-<text class="m" x="282" y="122" text-anchor="end">120°</text><text class="m" x="255" y="72" text-anchor="middle">90°</text>
-<text class="m" x="290" y="300" text-anchor="end">t = 3 · width 175</text>
+<text x="276" y="52" text-anchor="middle">≈ 62,5</text><text x="196" y="62" text-anchor="end">40</text>
+<text class="m" x="282" y="122" text-anchor="end">120°</text><text class="m" x="246" y="82" text-anchor="middle">90°</text>
+<text class="m" x="290" y="300" text-anchor="end">t = 3 · width 175 · height 192,8</text>
 </svg></div>
-        <p class="cap">Strip 37,53 → lip 40; 52,97 → flange 56,54; 160,43 → leg 161,54. Check: 161,54 + 56,54 × cos 60° + 3 = 192,8, same as the front view on the drawing.</p>
+        <p class="cap">Strip 37,32 → lip 40; 58,30 → flange ≈ 62,5; 160,38 → leg 161,54. Front view height 161,54 + 62,5 × sin 30° = 192,8.</p>
       </div>
     </div>
   </section>
@@ -204,18 +213,18 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
   <section class="card">
     <h2>Process steps</h2>
     <ol class="ops">
-      <li><div><h3>Laser cutting of the flat blank</h3><p>250,93 × 175, t = 3. 2 windows 70 × 35 R5 in the flange (10 from each side, 15 apart, 10 from the lip outer face). 8 Ø3,3 pilot holes for M4 in the leg: rows 6 and 155,5 from the leg end.</p></div></li>
+      <li><div><h3>Laser cutting of the flat blank</h3><p>256 × 175, t = 3, from the customer DXF. 2 windows 70 × 35 R5 in the flange (start ≈ 44,6 from the lip edge, 10 from each side, 15 apart). 8 Ø3,3 pilot holes for M4 in the leg: rows 6 and 155,5 from the leg end.</p></div></li>
       <li><div><h3>Deburring</h3><p>Windows, holes and edges.</p></div></li>
-      <li><div><h3>Press brake: 2 bends</h3><p>Lip 90° first, then the 60° bend (120° inside). Same direction for both. V24 die. For the 120° angle use a protractor or a 120° template on the first part: springback is larger on a partial bend.</p></div></li>
-      <li><div><h3>Tapping 8 × M4</h3><p>Tap after bending: the top row is only ≈ 1 mm from the 120° bend zone and the hole can go oval during bending. 3 mm gives about 4 threads, enough for M4.</p></div></li>
-      <li><div><h3>Inspection</h3><p>40 / 56,54 / 161,54, angles 90° and 120°, 192,8 front view height, M4 positions ±0,1.</p></div></li>
+      <li><div><h3>Press brake: 2 bends</h3><p>Lip 90° first, then the 60° bend (120° inside). Same direction for both. V24 die (inside R ≈ 4). Check 120° with a template on the first part.</p></div></li>
+      <li><div><h3>Tapping 8 × M4</h3><p>After bending: the top row is right at the edge of the 120° bend zone and can go oval.</p></div></li>
+      <li><div><h3>Inspection</h3><p>Lip 40, leg 161,54, angles 90° and 120°, front view height 192,8, M4 positions ±0,1.</p></div></li>
     </ol>
     <div class="tablewrap">
       <table>
         <thead><tr><th>Order</th><th>Bend</th><th>Bend length</th><th>Part position</th><th>Back gauge</th><th>Tooling</th><th>Check after the bend</th></tr></thead>
         <tbody>
-          <tr><td class="num">1</td><td>Lip, 90°</td><td class="num">175</td><td>Flat, lip edge against the gauge</td><td class="num">37,53<br>lip edge</td><td>Straight punch, V24</td><td>Lip 40 outside · 90° · remaining flat ≈ 215,9</td></tr>
-          <tr><td class="num">2</td><td>Flange / leg, 60° (120° inside)</td><td class="num">175</td><td>Same face up, turn 180°: leg end against the gauge, lip on the operator side</td><td class="num">160,43<br>leg end</td><td>Straight punch, V24</td><td>Angle 120° · flange 56,54 · leg 161,54 · height 192,8</td></tr>
+          <tr><td class="num">1</td><td>Lip, 90°</td><td class="num">175</td><td>Flat, lip edge against the gauge</td><td class="num">37,32<br>lip edge</td><td>Straight punch, V24</td><td>Lip 40 outside · 90° · remaining flat ≈ 221,4</td></tr>
+          <tr><td class="num">2</td><td>Flange / leg, 60° (120° inside)</td><td class="num">175</td><td>Same face up, turn 180°: leg end against the gauge, lip on the operator side</td><td class="num">160,38<br>leg end</td><td>Straight punch, V24</td><td>Angle 120° · leg 161,54 · flange ≈ 62,5 · height 192,8</td></tr>
         </tbody>
       </table>
     </div>
@@ -225,23 +234,21 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
     <section class="card">
       <h2>Drawing check</h2>
       <dl>
-        <dt>Lip (flat)</dt><dd>37,53 → 40</dd>
-        <dt>Flange (flat)</dt><dd>52,97 → 56,54</dd>
-        <dt>Leg (flat)</dt><dd>160,43 → 161,54</dd>
-        <dt>Bend deduction 90°</dt><dd>4,93 (R3, K = 0,5)</dd>
-        <dt>Bend deduction 60°</dt><dd>2,22</dd>
-        <dt>Windows</dt><dd>10 + 70 + 15 + 70 + 10 = 175 ✓</dd>
-        <dt>Weight</dt><dd>≈ 0,9 kg (if steel)</dd>
+        <dt>Lip (flat)</dt><dd>37,32 → 40</dd>
+        <dt>Flange (flat)</dt><dd>58,30 → ≈ 62,5</dd>
+        <dt>Leg (flat)</dt><dd>160,38 → 161,54</dd>
+        <dt>Bend deduction 90°</dt><dd>5,36 (R ≈ 4 on V24, K = 0,5)</dd>
+        <dt>Bend deduction 60°</dt><dd>2,32</dd>
+        <dt>Calculated blank</dt><dd>256,4 ≈ 256 measured ✓</dd>
+        <dt>Weight</dt><dd>≈ 0,95 kg (if steel)</dd>
       </dl>
     </section>
     <div class="note">
       <h3>To confirm before production</h3>
       <ul>
-        <li>Material, inside radius, quantity and part number are not visible on the photo. R3 (= t) assumed: with V24 the real radius is ≈ 4 and the blank gets ≈ 1 mm shorter. Use the DXF or a test part.</li>
-        <li>Bend directions are not written. Lip and leg are on the same side of the flange, so both bends go the same way.</li>
-        <li>Hole rows are read as 6 and 155,5 (6 + 149,5) from the leg end. The top row ends up ≈ 1 mm from the bend: tap after bending.</li>
+        <li>Bend the first part and check lip 40 and leg 161,54. If one is off, shift that back gauge by the same amount.</li>
+        <li>Material, quantity and part number are not visible on the photo.</li>
         <li>Hole positions across the width: 22,5 / 70 / 110 / 150 from one side, so 25 on the other side (not symmetric).</li>
-        <li>Windows start ≈ 4 mm from the lip bend zone: they can distort a little. Check flatness of the flange.</li>
       </ul>
     </div>
   </div>
@@ -250,7 +257,7 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 (function () {
-  const LEN = 175, B = 52.97, LEG = 37.53, LEG2 = 160.43, T = 3;
+  const LEN = 175, B = 58.30, LEG = 37.32, LEG2 = 160.38, T = 3;
   const R = d => d * Math.PI / 180;
   const stage = document.getElementById('stage');
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -278,7 +285,7 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
   const outer = new THREE.Group(); outer.rotation.x = -Math.PI / 2; scene.add(outer);
   const root = new THREE.Group(); root.position.set(-LEN / 2, -B / 2, 40); outer.add(root);
   function rrect(x0, y0, x1, y1, r) { const p = new THREE.Path(); p.moveTo(x0 + r, y0); p.lineTo(x1 - r, y0); p.quadraticCurveTo(x1, y0, x1, y0 + r); p.lineTo(x1, y1 - r); p.quadraticCurveTo(x1, y1, x1 - r, y1); p.lineTo(x0 + r, y1); p.quadraticCurveTo(x0, y1, x0, y1 - r); p.lineTo(x0, y0 + r); p.quadraticCurveTo(x0, y0, x0 + r, y0); return p; }
-  const fl = rect(0, 0, LEN, B); fl.holes.push(rrect(10, 7.53, 80, 42.53, 5)); fl.holes.push(rrect(95, 7.53, 165, 42.53, 5));
+  const fl = rect(0, 0, LEN, B); fl.holes.push(rrect(10, 7.32, 80, 42.32, 5)); fl.holes.push(rrect(95, 7.32, 165, 42.32, 5));
   root.add(plate(fl, 'flange'));
   const P = {};
   function pivot(name, pos, ang, shape) {
@@ -287,15 +294,15 @@ dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; 
     P[name] = { g, ang };
   }
   pivot('lip', [0, 0, 0], R(90), rect(0, -LEG, LEN, 0));
-  const lg = rect(0, 0, LEN, LEG2); [22.5, 70, 110, 150].forEach(x => [4.93, LEG2 - 6].forEach(y => { const h = new THREE.Path(); h.absarc(x, y, 1.65, 0, Math.PI * 2, true); lg.holes.push(h); }));
+  const lg = rect(0, 0, LEN, LEG2); [22.5, 70, 110, 150].forEach(x => [LEG2 - 155.5, LEG2 - 6].forEach(y => { const h = new THREE.Path(); h.absarc(x, y, 1.65, 0, Math.PI * 2, true); lg.holes.push(h); }));
   pivot('leg', [0, B, 0], R(-60), lg);
   const STEPS = [
-    { part: null, title: 'Laser-cut blank', text: 'Blank 250,93 × 175, t = 3, with the 2 windows and 8 pilot holes. Both bends go the same way.',
-      gauge: '—', after: ['Blank 250,93 × 175', 'Windows 70 × 35 R5, 10 from each side', '8 × Ø3,3 for M4'] },
+    { part: null, title: 'Laser-cut blank', text: 'Blank 256 × 175, t = 3, from the customer DXF, with the 2 windows and 8 pilot holes. Both bends go the same way.',
+      gauge: '—', after: ['Blank 256 × 175', 'Windows 70 × 35 R5, 10 from each side', '8 × Ø3,3 for M4, rows 6 / 155,5 from the leg end'] },
     { part: 'lip', title: 'Bend 1 · lip 90°', text: 'Part flat, lip edge against the back gauge, bend over the full 175 width.',
-      gauge: '37,53 (lip edge)', after: ['Lip 40 outside', 'Angle 90°', 'Remaining flat ≈ 215,9 (lip outer face → leg end)'] },
+      gauge: '37,32 (lip edge)', after: ['Lip 40 outside', 'Angle 90°', 'Remaining flat ≈ 221,4 (lip outer face → leg end)'] },
     { part: 'leg', title: 'Bend 2 · flange / leg 60° (120° inside)', text: 'Same face up, turn 180°: leg end against the back gauge, lip on the operator side. Partial bend: check 120° with a template on the first part.',
-      gauge: '160,43 (leg end)', after: ['Angle 120° between flange and leg', 'Flange 56,54 · leg 161,54 · lip 40', 'Front view height 192,8', 'Then tap 8 × M4'] }
+      gauge: '160,38 (leg end)', after: ['Angle 120° between flange and leg', 'Leg 161,54 · flange ≈ 62,5 · lip 40', 'Front view height 192,8', 'Then tap 8 × M4'] }
   ];
   const ORDER = STEPS.slice(1).map(s => s.part);
   const angle = {}; ORDER.forEach(k => angle[k] = 0);
